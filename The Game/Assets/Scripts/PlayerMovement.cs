@@ -27,10 +27,18 @@ public class PlayerMovement : MonoBehaviour
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
         Vector3 movement = v * Vector3.forward + h * Vector3.right;
-        if(movement.sqrMagnitude > 0)
+        if (movement.sqrMagnitude > 0)
             transform.rotation = Quaternion.LookRotation(movement, Vector3.up);
 
         cc.SimpleMove(movement * spd);
 
+        interact = false;
+    }
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.collider.tag=="Interactable")
+        {
+            interact = true;
+        }
     }
 }
