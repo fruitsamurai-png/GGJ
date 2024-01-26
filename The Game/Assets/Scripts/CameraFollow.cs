@@ -13,23 +13,21 @@ public class CameraFollow : MonoBehaviour
     [SerializeField]
     private float smoothTime = 0.2f;
     [SerializeField]
-    private Vector3 smoothVelocity = new Vector3(0.5f,0.5f,0.5f);
-    // Start is called before the first frame update
-
+    private Vector3 smoothVelocity = new Vector3(0.5f, 0.5f, 0.5f);
+    [SerializeField]
+    private int playerLayer = 3; 
     private Vector3 internalOffset = Vector3.zero;
     private void LateUpdate()
     {
 #if UNITY_EDITOR
-        if (!cam || !target) return; 
+        if (!cam || !target) return;
 #endif
-
         cam.transform.position = Vector3.SmoothDamp(
-            cam.transform.position,
-            target.position + offset + internalOffset,
-            ref smoothVelocity,
-            smoothTime
-        );
-
+          cam.transform.position,
+          target.position + offset + internalOffset,
+          ref smoothVelocity,
+          smoothTime
+      );
     }
     private void Update()
     {
@@ -41,10 +39,14 @@ public class CameraFollow : MonoBehaviour
         }
 #endif
         RaycastHit hit;
-        if (Physics.Linecast(cam.transform.position, target.position, out hit))
+        if (Physics.Linecast(cam.transform.position, target.position, out hit, playerLayer))
         {
-            Vector3 n = (hit.point - cam.transform.position).normalized;
-            internalOffset = n * hit.distance * 0.5f;
+            Vector3 v = target.position - hit.point;
+            internalOffset = v.normalized * (v.magnitude + hit.transform.lossyScale.y * 0.8f );
+        }
+        else
+        {
+            internalOffset = Vector3.zero;
         }
     }
 }

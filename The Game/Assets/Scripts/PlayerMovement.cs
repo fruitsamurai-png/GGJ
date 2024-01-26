@@ -23,9 +23,8 @@ public class PlayerMovement : MonoBehaviour
         float v = Input.GetAxis("Vertical");
         Vector3 movement = v * Vector3.forward + h * Vector3.right;
         if(movement.sqrMagnitude > 0)
-        {
             transform.rotation = Quaternion.LookRotation(movement, Vector3.up);
-        }
+
         cc.SimpleMove(movement * moveSpd);
 
     }
