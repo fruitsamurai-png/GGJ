@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     private float sprintSpd = 10.0f;
     private CharacterController cc;
     private bool sprintToggle = false;
+    private bool interact;
     // Start is called before the first frame update
     void Start()
     {
