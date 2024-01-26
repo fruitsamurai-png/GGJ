@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 4331184}
   - component: {fileID: 4331183}
   - component: {fileID: 4331182}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -409,7 +409,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 395688208}
   m_LocalRotation: {x: -0, y: -0, z: 0.012980017, w: 0.9999158}
-  m_LocalPosition: {x: 1.05, y: 2.43, z: 0}
+  m_LocalPosition: {x: 1.05, y: 2.43, z: -6.67}
   m_LocalScale: {x: 0.50502, y: 0.50502, z: 0.50502}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -663,7 +663,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 992850316}
   target: {fileID: 1132371263}
-  offset: {x: 0, y: 3, z: -1}
+  offset: {x: 0, y: 4, z: -1}
   smoothTime: 0.2
   smoothVelocity: {x: 0.5, y: 0.5, z: 0.5}
   playerLayer: 3
@@ -780,7 +780,7 @@ GameObject:
   - component: {fileID: 1132371265}
   - component: {fileID: 1132371264}
   - component: {fileID: 1132371266}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -884,6 +884,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpd: 5
+  sprintSpd: 10
 --- !u!54 &1132371266
 Rigidbody:
   m_ObjectHideFlags: 0
