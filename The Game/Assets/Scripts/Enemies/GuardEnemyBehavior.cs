@@ -8,16 +8,6 @@ using UnityEngine.AI;
 
 using Debug = UnityEngine.Debug;
 
-public abstract class State
-{
-    public StateMachine m_Sm;
-    public GameObject m_Go;
-
-    public abstract void OnEnter();
-    public abstract void OnUpdate();
-    public abstract void OnExit();
-}
-
 public class GuardIdleState : State
 {
     private readonly float m_IdleDuration = 2.0f;
@@ -102,49 +92,59 @@ public class GuardPatrollingState : State
         Debug.Log("Guard patrolling state on exit!");
     }
 }
-public class StateMachine
+
+public class GuardEnemy : Enemy
 {
-    public void Update()
+    public GuardEnemy(GameObject go)
     {
-        if (m_ActiveState != null)
-        {
-            m_ActiveState.OnUpdate();
-        }
+        m_EnemyStateMachine = new StateMachine();
+        m_GameObject = go;
+    }
+    public override void Start()
+    {
+        m_EnemyStateMachine.ChangeState(new GuardPatrollingState(m_EnemyStateMachine, m_GameObject));
     }
 
-    public void ChangeState(State newState)
+    public override void Update()
     {
-        if (m_ActiveState != null)
-        {
-            m_ActiveState.OnExit();
-        }
-        
-        m_ActiveState = newState;
+        m_EnemyStateMachine.Update();
+    }
+    public override void NotifyDistraction(GameObject distraction)
+    {
 
-        if (m_ActiveState != null)
-        {
-            m_ActiveState.OnEnter();
-        }
+    }
+    public override void Alert(GameObject alerter)
+    {
+
+    }
+    public override void Noise(float noiselevel)
+    {
+
+    }
+    public override void Jailbreak(int playerLevel, float stunTime)
+    {
+
     }
 
-    private State m_ActiveState;
+    GameObject m_GameObject;
 }
 
-public class EnemyBehavior : MonoBehaviour
+
+public class GuardEnemyBehavior : MonoBehaviour
 {
     // Start is called before the first frame update
 
     void Start()
     {
-        m_EnemyStateMachine = new StateMachine();
-        m_EnemyStateMachine.ChangeState(new GuardPatrollingState(m_EnemyStateMachine, gameObject));
+        m_GuardEnemy = new GuardEnemy(gameObject);
+        m_GuardEnemy.Start();
     }
 
     // Update is called once per frame
     void Update()
     {
-        m_EnemyStateMachine.Update();
+        m_GuardEnemy.Update();
     }
 
-    StateMachine m_EnemyStateMachine;
+    GuardEnemy m_GuardEnemy;
 }
