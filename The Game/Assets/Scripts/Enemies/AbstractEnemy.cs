@@ -84,6 +84,8 @@ public abstract class Enemy
         foreach (Collider c in Physics.OverlapSphere(m_GameObject.transform.position, radius, LayerMask.GetMask("Guards")))
         {
             GameObject o = c.gameObject;
+
+            // Don't alert self
             if (o == m_GameObject)
                 continue;
 
@@ -165,10 +167,12 @@ public abstract class Enemy
     {
         // Doesn't really work well for angles > 180..
         Vector3 foward = m_GameObject.transform.forward;
-        float rotationAngle = m_Fov / 2.0f; 
+        float rotationAngle = m_Fov / 2.0f;
 
-        Quaternion rotationQuaternion1 = Quaternion.Euler(0f, -rotationAngle, 0f);
-        Quaternion rotationQuaternion2 = Quaternion.Euler(0f, rotationAngle, 0f);
+        Vector3 euler = m_GameObject.transform.rotation.eulerAngles;
+
+        Quaternion rotationQuaternion1 = Quaternion.Euler(0.0f, -rotationAngle,0.0f);
+        Quaternion rotationQuaternion2 = Quaternion.Euler(0.0f, rotationAngle, 0.0f);
 
         Vector3 rotatedVector1 = rotationQuaternion1 * foward;
         Vector3 rotatedVector2 = rotationQuaternion2 * foward;
@@ -176,9 +180,10 @@ public abstract class Enemy
         rotatedVector1.Scale(new Vector3(m_ViewDistance, m_ViewDistance, m_ViewDistance));
         rotatedVector2.Scale(new Vector3(m_ViewDistance, m_ViewDistance, m_ViewDistance));
 
+        Vector3 p0= m_GameObject.transform.position;
         Vector3 p1 = m_GameObject.transform.position + rotatedVector1;
         Vector3 p2 = m_GameObject.transform.position + rotatedVector2;
-
+        Vector3 p3 = m_GameObject.transform.position;
 
         Ray r1 = new Ray(m_GameObject.transform.position, rotatedVector1);
         if (Physics.Raycast(r1, out RaycastHit hitInfo1))
@@ -211,10 +216,16 @@ public abstract class Enemy
             }
         }
 
-        m_LineRenderer.SetPosition(0, m_GameObject.transform.position);
+        const float groundLevel = 1.0f;
+        p0.y = groundLevel;
+        p1.y = groundLevel;
+        p2.y = groundLevel;
+        p3.y = groundLevel;
+
+        m_LineRenderer.SetPosition(0, p0);
         m_LineRenderer.SetPosition(1, p1);
         m_LineRenderer.SetPosition(2, p2);
-        m_LineRenderer.SetPosition(3, m_GameObject.transform.position);
+        m_LineRenderer.SetPosition(3, p3);
     }
 }
 

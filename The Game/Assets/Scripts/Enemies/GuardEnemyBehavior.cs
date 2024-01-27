@@ -189,7 +189,7 @@ public class GuardDistractedState : State
         if (m_Alterer != null)
         {
             agent.speed = 8.0f * GuardEnemyBehavior.speedMult;
-            agent.SetDestination(m_Alterer.GetComponent<Transform>().transform.position);
+            agent.SetDestination(m_Alterer.transform.position);
         }
     }
 
