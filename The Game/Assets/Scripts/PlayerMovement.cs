@@ -30,20 +30,18 @@ public class PlayerMovement : MonoBehaviour
 		float spd = sprintToggle ? sprintSpd : moveSpd;
 		float h = Input.GetAxis("Horizontal");
 		float v = Input.GetAxis("Vertical");
-		Vector3 movement = v * Vector3.forward + h * Vector3.right;
+		Vector3 movement = cc.isGrounded ? v * Vector3.forward + h * Vector3.right : Vector3.zero;
+
 		if (movement.sqrMagnitude > 0)
 			transform.rotation = Quaternion.LookRotation(movement, Vector3.up);
 
-		cc.SimpleMove(movement * spd);
+        cc.SimpleMove(movement * spd);
 
 
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
 			InteractNearby();
 		}
-	}
-	void OnControllerColliderHit(ControllerColliderHit hit)
-	{
 	}
 
 	void InteractNearby()

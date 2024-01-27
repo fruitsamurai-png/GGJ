@@ -82,6 +82,8 @@ public class GuardPatrollingState : State
 
     public override void OnUpdate()
     {
+        agent.speed = 1.0f * GuardEnemyBehavior.speedMult;
+
         if (agent.remainingDistance <= 1.0f)
         {
             m_Sm.ChangeState(new GuardIdleState(m_Sm, m_Go));
@@ -118,7 +120,7 @@ public class GuardAlertedState : State
 
     public override void OnUpdate()
     {
-        // dk
+        agent.speed = 8.0f * GuardEnemyBehavior.speedMult;
     }
 
     public override void OnExit()
@@ -163,6 +165,7 @@ public class GuardEnemy : Enemy
 
 public class GuardEnemyBehavior : MonoBehaviour
 {
+    public static float speedMult = 1.0f;
     // Start is called before the first frame update
 
     public Material fovMaterial;

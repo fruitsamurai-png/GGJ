@@ -6,7 +6,6 @@ public abstract class State
 {
     public StateMachine m_Sm;
     public GameObject m_Go;
-
     public abstract void OnEnter();
     public abstract void OnUpdate();
     public abstract void OnExit();
@@ -37,4 +36,11 @@ public class StateMachine
         }
     }
     private State m_ActiveState;
+
+    public State ActiveState
+    {
+        get { return m_ActiveState; }
+        set { m_ActiveState = value; }
+    }
+
 }

@@ -106,15 +106,15 @@ NavMeshSettings:
   m_BuildSettings:
     serializedVersion: 2
     agentTypeID: 0
-    agentRadius: 0.5
-    agentHeight: 2
-    agentSlope: 45
-    agentClimb: 0.4
+    agentRadius: 2.1
+    agentHeight: 4
+    agentSlope: 29.2
+    agentClimb: 1.2
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
     minRegionArea: 2
     manualCellSize: 0
-    cellSize: 0.16666667
+    cellSize: 0.7
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
@@ -401,7 +401,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 489966965}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 10
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -515,32 +515,12 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
---- !u!1 &1049692326 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1804331873475715895, guid: c2ed416f75f3ee8478c163effb4c2bf8,
-    type: 3}
-  m_PrefabInstance: {fileID: 1804331873055711306}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1146816398 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1804331873475716043, guid: c2ed416f75f3ee8478c163effb4c2bf8,
     type: 3}
   m_PrefabInstance: {fileID: 1804331873055711306}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1146816405
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1049692326}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00cdca0f7fccceb469a1216d1182e4ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ability: {fileID: 11400000, guid: 2f9f3089347b3754c9b7413004ccedf5, type: 2}
-  key: 9
 --- !u!1001 &1236857705
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1095,6 +1075,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1804331873055711313, guid: c2ed416f75f3ee8478c163effb4c2bf8,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 112
+      objectReference: {fileID: 0}
     - target: {fileID: 1804331873475715895, guid: c2ed416f75f3ee8478c163effb4c2bf8,
         type: 3}
       propertyPath: m_Name
@@ -1165,6 +1150,17 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4152388513767511742, guid: c2ed416f75f3ee8478c163effb4c2bf8,
+        type: 3}
+      propertyPath: key
+      value: 113
+      objectReference: {fileID: 0}
+    - target: {fileID: 4152388513767511742, guid: c2ed416f75f3ee8478c163effb4c2bf8,
+        type: 3}
+      propertyPath: ability
+      value: 
+      objectReference: {fileID: 11400000, guid: 2f9f3089347b3754c9b7413004ccedf5,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2ed416f75f3ee8478c163effb4c2bf8, type: 3}
 --- !u!1001 &4123053652290894661

@@ -5,18 +5,22 @@ using UnityEngine;
 [CreateAssetMenu]
 public class SlowTime : Ability
 {
+    [Range(0.0f, 1.0f)]
+    public float slowMult = 1.0f;
+    public override void OnTrigger()
+    {
+        GuardEnemyBehavior.speedMult = slowMult;
+    }
 
     public override void OnActive()
     {
-        Debug.Log("Slow Time");
-        Time.timeScale = 0.1f;
-
+        GuardEnemyBehavior.speedMult = slowMult;
+        Debug.Log("Slow guards");
     }
-
     public override void OnCooldown()
     {
-        Debug.Log("Re Time");
+        GuardEnemyBehavior.speedMult = 1.0f;
+        Debug.Log("Resume guards");
 
-        Time.timeScale = 1.0f;
     }
 }
