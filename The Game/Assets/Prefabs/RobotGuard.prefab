@@ -234,4 +234,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bed47e3e85a042741abcba272af34491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fovMaterial: {fileID: 0}
+  fovMaterial: {fileID: 2100000, guid: 8817b244da8426b49968d6ebf3edf448, type: 2}

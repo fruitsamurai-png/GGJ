@@ -4,16 +4,26 @@ using UnityEngine;
 
 public class SecurityBotEnemy : GuardEnemy
 {
+    public bool InRange = false;
+    public bool RayHit = false;
+
+    public LineRenderer lineRenderer;
     public SecurityBotEnemy(GameObject go, Material fovMaterial)
         : base(go, fovMaterial)
     {
-
+        lineRenderer = go.GetComponent<LineRenderer>();
+        lineRenderer.positionCount = 2;
     }
 
     private bool CheckIsPlayerInFOV()
     {
         Vector3 direction = (m_PlayerObject.transform.position - m_GameObject.transform.position);
-        if (direction.sqrMagnitude > m_ViewDistance * m_ViewDistance)
+
+        lineRenderer.SetPosition(0, m_PlayerObject.transform.position);
+        lineRenderer.SetPosition(1, m_GameObject.transform.position);
+
+        InRange = direction.sqrMagnitude < m_ViewDistance * m_ViewDistance;
+        if (!InRange)
         {
             return false;
         }
@@ -23,7 +33,8 @@ public class SecurityBotEnemy : GuardEnemy
 
         if (Physics.Raycast(ray, out RaycastHit hitInfo))
         {
-            return m_PlayerObject == hitInfo.transform.gameObject;
+            RayHit = m_PlayerObject == hitInfo.transform.gameObject;
+            return RayHit;
         }
 
         return false;
@@ -80,4 +91,11 @@ public class SecurityBotEnemyBehavior : MonoBehaviour
     {
         m_Enemy.Update();
     }
+    //void OnGUI()
+    //{
+    //    GUI.TextArea(new Rect(10, 10, 250, 100), 
+    //        "Alert: " + m_Enemy.m_AlertLevel + 
+    //        "In range: " + m_Enemy.InRange +
+    //        "Hit with ray: " + m_Enemy.RayHit);
+    //}
 }
