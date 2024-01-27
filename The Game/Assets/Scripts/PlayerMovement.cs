@@ -18,7 +18,6 @@ public class PlayerMovement : MonoBehaviour
 
 	private CharacterController cc;
 	private bool sprintToggle = false;
-	private bool canunlock = false;
 	// Start is called before the first frame update
 
 	void Start()
@@ -106,12 +105,6 @@ public class PlayerMovement : MonoBehaviour
         if (closestInteractable.TryGetComponent(out LightSwitch light))
         {
 			light.TriggerSwitch();
-            return;
-        }
-        if (closestInteractable.TryGetComponent(out SecurityLock loc))
-        {
-			MasterManagers mm = MasterManagers.instance;
-			canunlock =loc.Jailbreak(mm.abilityManager.AILevel);
             return;
         }
     }

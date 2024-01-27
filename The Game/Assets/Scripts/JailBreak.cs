@@ -11,6 +11,7 @@ public class JailBreak : Ability
     float enemyStunDur = 1.5f;
     [SerializeField]
     int playerLayer = 3;
+    private bool canunlock = false;
 
     public float QueryRadius  { get => queryRadius; }
     public override void OnTrigger()
@@ -21,7 +22,7 @@ public class JailBreak : Ability
 
         float closestDistance = Mathf.Infinity;
         GameObject closestInteractable = null;
-        foreach (Collider c in Physics.OverlapSphere(transform.position, queryRadius, LayerMask.GetMask("Guards")))
+        foreach (Collider c in Physics.OverlapSphere(transform.position, queryRadius, LayerMask.GetMask("Guards")| LayerMask.GetMask("Interactable")))
         {
             GameObject o = c.gameObject;
             float dist = Vector3.Distance(o.transform.position, transform.position);
@@ -37,13 +38,18 @@ public class JailBreak : Ability
         {
             return;
         }
-
+        if (closestInteractable.TryGetComponent(out SecurityLock loc))
+        {
+            MasterManagers mm = MasterManagers.instance;
+            canunlock = loc.Jailbreak(mm.abilityManager.AILevel);
+            return;
+        }
         if (closestInteractable.TryGetComponent(out GuardEnemyBehavior behavior))
         {
             MasterManagers mm = MasterManagers.instance;
             behavior.m_Enemy.Jailbreak(mm.abilityManager.AILevel, enemyStunDur);
             return;
         }
-       
+        
     }
 }

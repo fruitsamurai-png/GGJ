@@ -15,12 +15,12 @@ public class SlowTime : Ability
     public override void OnActive()
     {
         GuardEnemyBehavior.speedMult = slowMult;
-        Debug.Log("Slow guards");
+       // Debug.Log("Slow guards");
     }
     public override void OnCooldown()
     {
         GuardEnemyBehavior.speedMult = 1.0f;
-        Debug.Log("Resume guards");
+       // Debug.Log("Resume guards");
 
     }
 }
