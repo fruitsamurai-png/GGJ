@@ -22,6 +22,13 @@ public class UIStealArtwork : MonoBehaviour
 		player = GameObject.FindWithTag("Player");
 		instance = this;
 	}
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.Escape))
+		{
+			CloseButton();
+		}
+	}
 
 	private void OnEnable()
 	{

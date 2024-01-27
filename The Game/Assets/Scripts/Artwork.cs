@@ -15,6 +15,7 @@ public class Artwork : MonoBehaviour
 
 	public GameObject[] realArtObjects;
 	public GameObject[] fakeArtObjects;
+	public GameObject blankSpaceObject;
 
 	private void Start()
 	{
@@ -35,6 +36,8 @@ public class Artwork : MonoBehaviour
 		{
 			fakeArtObjects[i].SetActive(artState == ArtState.FAKE && i == artwork);
 		}
+
+		blankSpaceObject.SetActive(artState == ArtState.STOLEN);
 	}
 
 	public bool IsStolen
@@ -54,11 +57,14 @@ public class Artwork : MonoBehaviour
 	public void Steal(GameObject interactor)
 	{
 		artState = ArtState.STOLEN;
+		StealingInventory.AddArt(artwork, artLevel);
+		UpdateArtwork();
 	}
 	public void Replace(int level)
 	{
 		artState = ArtState.FAKE;
 		replicaLevel = level;
+		UpdateArtwork();
 	}
 
 	private void OnValidate()

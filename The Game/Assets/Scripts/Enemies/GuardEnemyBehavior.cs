@@ -105,6 +105,30 @@ public class GuardPatrollingState : State
 		{
 			m_Sm.ChangeState(new GuardIdleState(m_Sm, m_Go));
 		}
+
+		//Look for nearby paintings and see if they're stolen
+		foreach (Collider c in Physics.OverlapSphere(m_Enemy.m_GameObject.transform.position, 10f, LayerMask.GetMask("Interactable")))
+		{
+			if (c.gameObject.TryGetComponent(out Artwork artwork))
+			{
+				bool inLos = true;
+				Vector3 ePos = m_Enemy.m_GameObject.transform.position;
+				if (Physics.Linecast(ePos, c.gameObject.transform.position, out RaycastHit h))
+				{
+					if (h.collider.gameObject != c.gameObject)
+						inLos = false;
+				}
+
+				if (inLos && artwork.IsStolen)
+				{
+					Debug.DrawLine(m_Enemy.m_GameObject.transform.position, c.gameObject.transform.position, Color.red);
+					if (artwork.artState == Artwork.ArtState.STOLEN || artwork.replicaLevel < artwork.artLevel)
+					{
+						m_Enemy.IncreaseAlertess();
+					}
+				}
+			}
+		}
 	}
 
 	public override void OnExit()
