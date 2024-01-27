@@ -162,8 +162,8 @@ public class GuardDistractedState : State
 }
 public class GuardEnemy : Enemy
 {
-    public GuardEnemy(GameObject go, Material fovMaterial, GameObject m_AlertLevelUIPrefab) 
-        : base(go, fovMaterial, m_AlertLevelUIPrefab)
+    public GuardEnemy(GameObject go, Material fovMaterial) 
+        : base(go, fovMaterial)
     {
         m_EnemyStateMachine = new StateMachine();
         m_GameObject = go;
@@ -201,7 +201,6 @@ public class GuardEnemy : Enemy
 
 public class GuardEnemyBehavior : MonoBehaviour
 {
-    public GameObject m_AlertLevelUI;
     public Material fovMaterial;
     public GuardEnemy m_Enemy;
 
@@ -209,7 +208,7 @@ public class GuardEnemyBehavior : MonoBehaviour
 
 	void Start()
     {
-        m_Enemy = new GuardEnemy(gameObject, fovMaterial, m_AlertLevelUI);
+        m_Enemy = new GuardEnemy(gameObject, fovMaterial);
         m_Enemy.Start();
     }
 

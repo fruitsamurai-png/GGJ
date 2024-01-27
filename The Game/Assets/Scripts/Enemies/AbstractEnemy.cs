@@ -24,7 +24,7 @@ public abstract class Enemy
     public GameObject m_PlayerObject;
     public bool IsPlayerInFOV = false;
 
-    protected Enemy(GameObject gameObject, Material fovMaterial, GameObject alertLevelPrefab)
+    protected Enemy(GameObject gameObject, Material fovMaterial)
     {
         m_GameObject = gameObject;
         m_LineRenderer = m_GameObject.GetComponent<LineRenderer>();
@@ -55,6 +55,17 @@ public abstract class Enemy
 
     public virtual void UpdateAlertness()
     {
+        // 2 ray cast on edges of cone done when drawing fov cone.
+        Ray ray = new Ray(m_GameObject.transform.position, m_GameObject.transform.forward);
+
+        if (Physics.Raycast(ray, out RaycastHit hitInfo))
+        {
+            if (hitInfo.distance < m_ViewDistance)
+            {
+                IsPlayerInFOV |= (m_PlayerObject == hitInfo.transform.gameObject);
+            }
+        }
+
         if (IsPlayerInFOV)
         {
             IncreaseAlertess(m_AlertStepAmount);
@@ -75,6 +86,7 @@ public abstract class Enemy
     public virtual void IncreaseAlertess(float amount)
     {
         m_AlertLevel += amount;
+        m_AlertGraceElapsedTime = 0.0f;
     }
 
     public virtual void DecreaseAlertess(float amount)
@@ -106,8 +118,13 @@ public abstract class Enemy
         {
             if (hitInfo1.distance < m_ViewDistance)
             {
-                p1 = hitInfo1.point;
-                IsPlayerInFOV |= (hitInfo1.transform.gameObject == m_PlayerObject);
+                bool IsHitPlayer = (hitInfo1.transform.gameObject == m_PlayerObject);
+                IsPlayerInFOV |= IsHitPlayer;
+
+                if (!IsHitPlayer) // Weird to clip cone to player I think
+                {
+                    p1 = hitInfo1.point;
+                }
             }
         }
         Ray r2 = new Ray(m_GameObject.transform.position, rotatedVector2);
@@ -115,8 +132,13 @@ public abstract class Enemy
         {
             if (hitInfo2.distance < m_ViewDistance)
             {
-                p2 = hitInfo2.point;
-                IsPlayerInFOV |= (hitInfo2.transform.gameObject == m_PlayerObject);
+                bool IsHitPlayer = (hitInfo2.transform.gameObject == m_PlayerObject);
+                IsPlayerInFOV |= IsHitPlayer; 
+
+                if (!IsHitPlayer) // Weird to clip cone to player I think
+                {
+                    p2 = hitInfo2.point;
+                }
             }
         }
 

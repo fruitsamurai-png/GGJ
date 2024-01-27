@@ -149,8 +149,8 @@ public class CameraEnemy : Enemy
 {
     public Vector3 m_InitialFoward;
 
-    public CameraEnemy(GameObject go, Material fovMaterial, GameObject m_AlertLevelUIPrefab) 
-        : base(go, fovMaterial, m_AlertLevelUIPrefab)
+    public CameraEnemy(GameObject go, Material fovMaterial) 
+        : base(go, fovMaterial)
     {
         m_EnemyStateMachine = new StateMachine();
         m_GameObject = go;
@@ -163,7 +163,10 @@ public class CameraEnemy : Enemy
 
     public override void Update()
     {
+        IsPlayerInFOV = false;
         m_EnemyStateMachine.Update();
+        DrawFOVCone();
+        UpdateAlertness();
     }
     public override void NotifyDistraction(GameObject distraction)
     {
@@ -191,13 +194,12 @@ public class CameraEnemy : Enemy
 
 public class CameraEnemyBehavior : MonoBehaviour
 {
-    public GameObject m_AlertLevelUIPrefab;
     public Material fovMaterial;
 
     public CameraEnemy m_Enemy;
     void Start()
     {
-        m_Enemy = new CameraEnemy(gameObject, fovMaterial, m_AlertLevelUIPrefab);
+        m_Enemy = new CameraEnemy(gameObject, fovMaterial);
         m_Enemy.Start();
     }
 
