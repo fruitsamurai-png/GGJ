@@ -48,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
 
 	void InteractNearby()
 	{
-		float interactRange = 1f;
+		float interactRange = 1.5f;
 		float closestDistance = 10000f;
 		GameObject closestInteractable = null;
 
