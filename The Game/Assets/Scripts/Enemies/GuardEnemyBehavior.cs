@@ -166,8 +166,9 @@ public class GuardEnemyBehavior : MonoBehaviour
     // Start is called before the first frame update
 
     public Material fovMaterial;
+	public GuardEnemy m_Enemy;
 
-    void Start()
+	void Start()
     {
         m_Enemy = new GuardEnemy(gameObject, fovMaterial);
         m_Enemy.Start();
@@ -180,5 +181,9 @@ public class GuardEnemyBehavior : MonoBehaviour
         m_Enemy.DrawFOVCone();
     }
 
-    public GuardEnemy m_Enemy;
+	public void NotifyDistraction(GameObject distraction)
+	{
+		Debug.Log($"Guard {gameObject.name} was notified of distraction {distraction.name}.");
+		m_Enemy.NotifyDistraction(distraction);
+	}
 }
