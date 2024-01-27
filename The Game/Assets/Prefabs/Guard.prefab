@@ -8,13 +8,14 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1586621234878737746}
+  - component: {fileID: 4041055669044148227}
   - component: {fileID: 1586621234878737747}
   - component: {fileID: 1586621234878737748}
   - component: {fileID: 1586621234878737749}
   - component: {fileID: 489966976}
   - component: {fileID: 489966970}
   - component: {fileID: 489966971}
+  - component: {fileID: 2882034646423261294}
   m_Layer: 8
   m_Name: Guard
   m_TagString: Untagged
@@ -22,21 +23,26 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1586621234878737746
-Transform:
+--- !u!224 &4041055669044148227
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1586621234878737750}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.1, z: 0.1737177}
+  m_LocalPosition: {x: 0, y: 0, z: 0.1737177}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 3.1}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!33 &1586621234878737747
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -154,8 +160,8 @@ LineRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.06145096
-        value: 0.12578583
+        time: 0
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -214,7 +220,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b27a7b073eed1e84ab382f97104cf785, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fovMaterial: {fileID: 0}
+  m_AlertLevelUI: {fileID: 4565111228760550760, guid: 93a0f1a1e9a15404ca5b7bae3e1842c2,
+    type: 3}
+  fovMaterial: {fileID: 2100000, guid: 8817b244da8426b49968d6ebf3edf448, type: 2}
 --- !u!195 &489966971
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -237,3 +245,11 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!222 &2882034646423261294
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586621234878737750}
+  m_CullTransparentMesh: 1
