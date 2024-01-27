@@ -22,6 +22,7 @@ public abstract class Enemy
     public float m_AlertGraceElapsedTime = 0.0f;
     public float m_AlertStepAmount = 0.001f;
     public readonly float m_AlertGracePeriod = 2.0f;
+
     public Material m_MeshMaterial;
 
     public GameObject m_PlayerObject;

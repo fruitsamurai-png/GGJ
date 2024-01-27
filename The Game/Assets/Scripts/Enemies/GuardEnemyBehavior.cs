@@ -229,9 +229,6 @@ public class GuardEnemy : Enemy
     }
     public override void Alert(GameObject alerter)
     {
-        if (isAltered)
-            return;
-
         Enemy enemy = m_GameObject.GetComponent<GuardEnemyBehavior>().m_Enemy; // lol
         m_EnemyStateMachine.ChangeState(new GuardAlertedState(m_EnemyStateMachine, m_GameObject, alerter, enemy));
     }

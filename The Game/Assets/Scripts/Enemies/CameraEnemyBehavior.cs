@@ -214,9 +214,6 @@ public class CameraEnemy : Enemy
     }
     public override void Alert(GameObject alerter)
     {
-        if (isAltered)
-            return;
-
         m_EnemyStateMachine.ChangeState(new CameraAlertedState(m_EnemyStateMachine, m_GameObject,
             alerter, m_GameObject.GetComponent<CameraEnemyBehavior>().m_Enemy));
     }
