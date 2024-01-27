@@ -222,6 +222,17 @@ public abstract class Enemy
             }
         }
 
+		if (m_IsPlayerInFOV)
+		{
+			if(Physics.Linecast(m_GameObject.transform.position,m_PlayerObject.transform.position,out RaycastHit hf))
+			{
+				if(hf.collider.gameObject != m_PlayerObject)
+				{
+					m_IsPlayerInFOV = false;
+				}
+			}
+		}
+
         p0.y = m_GroundLevel;
         p1.y = m_GroundLevel;
         p2.y = m_GroundLevel;

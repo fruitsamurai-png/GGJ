@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
 	[SerializeField]
 	private float sprintSpd = 10.0f;
 	[SerializeField]
-	private int noiseGen = 1; // noise added by sprint
+	private float noiseGen = 0.5f; // noise added by sprint
 	[SerializeField]
 	private float noiseRadius = 5.0f; // noise detection radius
 	bool collided = false;
@@ -22,23 +22,20 @@ public class PlayerMovement : MonoBehaviour
 
 	void Start()
 	{
-
 		cc = GetComponent<CharacterController>();
-
-    }
+	}
 
 	void UpdateNoiseForGuards()
-    {
+	{
 		var cols = Physics.OverlapSphere(transform.position, noiseRadius, LayerMask.GetMask("Guards"));
 
 		foreach (Collider c in cols)
 		{
 			GuardEnemyBehavior comp = c.gameObject.GetComponent<GuardEnemyBehavior>();
 
-			if(comp)
-            {
-				comp.m_Enemy.Noise(noiseGen); // add to this enemy noise level
-				Debug.Log("Add noise");
+			if (comp)
+			{
+				comp.m_Enemy.Noise(noiseGen * Time.deltaTime); // add to this enemy noise level
 			}
 		}
 
@@ -55,58 +52,58 @@ public class PlayerMovement : MonoBehaviour
 		float v = Input.GetAxis("Vertical");
 		Vector3 movement = cc.isGrounded ? v * Vector3.forward + h * Vector3.right : Vector3.zero;
 
-		if(sprintToggle && cc.isGrounded)
-        {
+		if (sprintToggle && cc.isGrounded)
+		{
 			UpdateNoiseForGuards();
 		}
 
 		if (movement.sqrMagnitude > 0)
 			transform.rotation = Quaternion.LookRotation(movement, Vector3.up);
 
-        cc.SimpleMove(movement * spd);
+		cc.SimpleMove(movement * spd);
 
 		CheckforGuards();
 
-        if (Input.GetKeyDown(KeyCode.Space))
+		if (Input.GetKeyDown(KeyCode.Space))
 		{
 			InteractNearby();
 		}
 	}
-    private void CheckforGuards()
-    {
-        float interactRange = 0.5f;
-        float closestDistance = 10000f;
-        GameObject closestEnemy = null;
+	private void CheckforGuards()
+	{
+		float interactRange = 0.5f;
+		float closestDistance = 10000f;
+		GameObject closestEnemy = null;
 
-        //Get the interactables within range and get the closest
-        foreach (Collider c in Physics.OverlapSphere(transform.position, interactRange, LayerMask.GetMask("Guards")))
-        {
-            GameObject o = c.gameObject;
-            float dist = Vector3.Distance(o.transform.position, transform.position);
-            if (dist < closestDistance)
-            {
-                closestDistance = dist;
-                closestEnemy = o;
-            }
-        }
-
-        //Exit out if there was no interactable found
-        if (closestEnemy == null)
-        {
-            return;
-        }
-		if(closestEnemy.TryGetComponent(out SecurityBotEnemyBehavior sec))
+		//Get the interactables within range and get the closest
+		foreach (Collider c in Physics.OverlapSphere(transform.position, interactRange, LayerMask.GetMask("Guards")))
 		{
-            collided=sec.m_Enemy.isAltered;
+			GameObject o = c.gameObject;
+			float dist = Vector3.Distance(o.transform.position, transform.position);
+			if (dist < closestDistance)
+			{
+				closestDistance = dist;
+				closestEnemy = o;
+			}
+		}
+
+		//Exit out if there was no interactable found
+		if (closestEnemy == null)
+		{
 			return;
-        }
-        if (closestEnemy.TryGetComponent(out GuardEnemyBehavior gua))
-        {
-            collided= gua.m_Enemy.isAltered;
-            return;
-        }
-    }
-    void InteractNearby()
+		}
+		if (closestEnemy.TryGetComponent(out SecurityBotEnemyBehavior sec))
+		{
+			collided = sec.m_Enemy.isAltered;
+			return;
+		}
+		if (closestEnemy.TryGetComponent(out GuardEnemyBehavior gua))
+		{
+			collided = gua.m_Enemy.isAltered;
+			return;
+		}
+	}
+	void InteractNearby()
 	{
 		float interactRange = 1.5f;
 		float closestDistance = 10000f;
@@ -136,10 +133,15 @@ public class PlayerMovement : MonoBehaviour
 			trashbin.Knockover(gameObject);
 			return;
 		}
-        if (closestInteractable.TryGetComponent(out LightSwitch light))
-        {
+		if (closestInteractable.TryGetComponent(out LightSwitch light))
+		{
 			light.TriggerSwitch();
-            return;
-        }
-    }
+			return;
+		}
+		if (closestInteractable.TryGetComponent(out Artwork art))
+		{
+			art.Interact(gameObject);
+			return;
+		}
+	}
 }

@@ -5,38 +5,65 @@ using UnityEngine;
 public class Artwork : MonoBehaviour
 {
 
-    bool isStolen = false;
-    int replicaLevel = 1;
-    [SerializeField]
-    string artWorkName;
-    [SerializeField]
-    GameObject artWorkUI;
+	public enum ArtState { REAL, STOLEN, FAKE };
 
-    public bool IsStolen
-    {
-        get { return isStolen; }
-    }
-    public int ReplicaLevel
-    {
-        get { return replicaLevel; }
-        set { replicaLevel = value; }
-    }
+	public ArtState artState = ArtState.REAL;
+	public int artLevel = 1;
+	public int replicaLevel = 1;
 
-    public void Interact(GameObject interactor)
-    {
-        //pop ui
-        artWorkUI.SetActive(true);
-    }
-    public void Steal(GameObject interactor)
-    {
-        isStolen = true;
-        artWorkUI.SetActive(false);
-    }
-    public void Replace(int level)
-    {
-        artWorkUI.SetActive(false);
+	public int artwork = 0;
 
-    }
+	public GameObject[] realArtObjects;
+	public GameObject[] fakeArtObjects;
 
+	private void Start()
+	{
+		UpdateArtwork();
+	}
+	private void Update()
+	{
+		
+	}
+	public void UpdateArtwork()
+	{
+		for (int i = 0; i < realArtObjects.Length; i++)
+		{
+			realArtObjects[i].SetActive(artState == ArtState.REAL && i == artwork);
+		}
+
+		for (int i = 0; i < fakeArtObjects.Length; i++)
+		{
+			fakeArtObjects[i].SetActive(artState == ArtState.FAKE && i == artwork);
+		}
+	}
+
+	public bool IsStolen
+	{
+		get { return artState != ArtState.REAL; }
+	}
+	public int ReplicaLevel
+	{
+		get { return replicaLevel; }
+		set { replicaLevel = value; }
+	}
+
+	public void Interact(GameObject interactor)
+	{
+		UIStealArtwork.instance.OpenArtwork(this);
+	}
+	public void Steal(GameObject interactor)
+	{
+		artState = ArtState.STOLEN;
+	}
+	public void Replace(int level)
+	{
+		artState = ArtState.FAKE;
+		replicaLevel = level;
+	}
+
+	private void OnValidate()
+	{
+		UpdateArtwork();
+	}
 
 }

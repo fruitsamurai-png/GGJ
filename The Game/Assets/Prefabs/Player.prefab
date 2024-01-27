@@ -122,7 +122,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpd: 5
   sprintSpd: 10
-  noiseGen: 1
+  noiseGen: 0.5
   noiseRadius: 5
 --- !u!54 &1804331873055711313
 Rigidbody:
