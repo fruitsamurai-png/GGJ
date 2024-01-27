@@ -7,20 +7,14 @@ public class SecurityBotEnemy : GuardEnemy
     public bool InRange = false;
     public bool RayHit = false;
 
-    public LineRenderer lineRenderer;
     public SecurityBotEnemy(GameObject go, Material fovMaterial)
         : base(go, fovMaterial)
     {
-        lineRenderer = go.GetComponent<LineRenderer>();
-        lineRenderer.positionCount = 2;
     }
 
     private bool CheckIsPlayerInFOV()
     {
         Vector3 direction = (m_PlayerObject.transform.position - m_GameObject.transform.position);
-
-        lineRenderer.SetPosition(0, m_PlayerObject.transform.position);
-        lineRenderer.SetPosition(1, m_GameObject.transform.position);
 
         InRange = direction.sqrMagnitude < m_ViewDistance * m_ViewDistance;
         if (!InRange)
@@ -67,7 +61,7 @@ public class SecurityBotEnemy : GuardEnemy
         }
         else
         {
-            m_MeshMaterial.color = Color.LerpUnclamped(Color.white, Color.red, m_AlertLevel);
+            m_MeshMaterial.color = Color.LerpUnclamped(m_OriginalMaterialColor, Color.red, m_AlertLevel);
         }
     }
 }
