@@ -70,6 +70,7 @@ public class SecurityBotEnemyBehavior : MonoBehaviour
 {
     public Material fovMaterial;
     public SecurityBotEnemy m_Enemy;
+    GameObject childGameObject;
 
     // Start is called before the first frame update
     void Start()
@@ -78,12 +79,31 @@ public class SecurityBotEnemyBehavior : MonoBehaviour
         m_Enemy.m_Fov = 360.0f;
         m_Enemy.m_ViewDistance = 10.0f;
         m_Enemy.Start();
+        // Get the child Transform
+        Transform childTransform = gameObject.transform.GetChild(1);
+
+        // Access the child GameObject
+        childGameObject = childTransform.gameObject;
     }
 
     // Update is called once per frame
     void Update()
     {
         m_Enemy.Update();
+        if (m_Enemy.isAltered)
+        {
+            if (childGameObject.TryGetComponent(out TextBubble tex))
+            {
+                tex.TriggerTextSwitch(true);
+            }
+        }
+        else
+        {
+            if (childGameObject.TryGetComponent(out TextBubble tex))
+            {
+                tex.TriggerTextSwitch(false);
+            }
+        }
     }
     //void OnGUI()
     //{
