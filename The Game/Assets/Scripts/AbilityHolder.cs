@@ -47,8 +47,9 @@ public class AbilityHolder : MonoBehaviour
                     ability.OnCooldown();
                 }
                 else
-                    state = AbilityState.Cooldown;
-                
+                {
+                    state = AbilityState.Ready;
+                }
                 break;
         }
     }

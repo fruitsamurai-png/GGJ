@@ -6,5 +6,5 @@ using UnityEngine;
 
 public class AbilityManager : MonoBehaviour
 {
- 
+    public int AILevel = 0;
 }

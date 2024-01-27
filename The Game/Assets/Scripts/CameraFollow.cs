@@ -12,8 +12,6 @@ public class CameraFollow : MonoBehaviour
     private float smoothTime = 0.2f;
     [SerializeField]
     private Vector3 smoothVelocity = new Vector3(0.5f, 0.5f, 0.5f);
-    [SerializeField]
-    private float scale = 0.2f;
     private bool blocked = false;
     private Vector3 realOffset;
 

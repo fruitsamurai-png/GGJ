@@ -258,7 +258,6 @@ MonoBehaviour:
   offset: {x: 0, y: 8, z: -4}
   smoothTime: 0.25
   smoothVelocity: {x: 1, y: 1, z: 1}
-  scale: 0.2
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -516,12 +515,32 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!1 &1049692326 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1804331873475715895, guid: c2ed416f75f3ee8478c163effb4c2bf8,
+    type: 3}
+  m_PrefabInstance: {fileID: 1804331873055711306}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1146816398 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1804331873475716043, guid: c2ed416f75f3ee8478c163effb4c2bf8,
     type: 3}
   m_PrefabInstance: {fileID: 1804331873055711306}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1146816405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1049692326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00cdca0f7fccceb469a1216d1182e4ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ability: {fileID: 11400000, guid: 2f9f3089347b3754c9b7413004ccedf5, type: 2}
+  key: 9
 --- !u!1001 &1236857705
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -626,6 +645,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58cf8e2589ac7684684b727c53e4075d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AILevel: 0
 --- !u!114 &1374981517
 MonoBehaviour:
   m_ObjectHideFlags: 0
