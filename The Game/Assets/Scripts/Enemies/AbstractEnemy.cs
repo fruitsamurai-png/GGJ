@@ -19,13 +19,14 @@ public abstract class Enemy
     private int FOVLayerExcludeMask = 0;
 
     public float m_AlertLevel = 0.0f;
-    public readonly float m_AlertGracePeriod = 2.0f;
     public float m_AlertGraceElapsedTime = 0.0f;
     public float m_AlertStepAmount = 0.001f;
+    public readonly float m_AlertGracePeriod = 2.0f;
     public Material m_MeshMaterial;
 
     public GameObject m_PlayerObject;
     public bool IsPlayerInFOV = false;
+    public bool isAltered = false;
 
     protected Enemy(GameObject gameObject, Material fovMaterial)
     {
@@ -55,9 +56,14 @@ public abstract class Enemy
     // Gameplay enemy interface
     public abstract void NotifyDistraction(GameObject distraction);// - will be called by distractions the player activated.
     public abstract void Alert(GameObject alerter);// - will be called by other enemies when they are alerted to also alert this enemy.
-    public abstract void Noise(float noiselevel);// - will be called by the player when nearby this enemy and making noise, refer to mechanics on what this does.
     public abstract void Jailbreak(int playerLevel, float stunTime);// - stuns the enemy for specified stun time if the playerLevel is >= enemy level.
-    
+
+    // Virtual so can override for specialized behavior, unsure if needed
+    public virtual void Noise(float noiselevel)
+    {
+        // - will be called by the player when nearby this enemy and making noise, refer to mechanics on what this does.
+        m_AlertLevel += noiselevel;
+    }
     public virtual void AlertGuardsInVicinity(GameObject alerter, float radius)
     {
         foreach (Collider c in Physics.OverlapSphere(m_GameObject.transform.position, radius, LayerMask.GetMask("Guards")))
@@ -94,13 +100,13 @@ public abstract class Enemy
 
         if (IsPlayerInFOV)
         {
-            IncreaseAlertess(m_AlertStepAmount);
+            IncreaseAlertess();
         }
         else
         {
             if (m_AlertGraceElapsedTime >= m_AlertGracePeriod)
             {
-                DecreaseAlertess(m_AlertStepAmount);
+                DecreaseAlertess();
             }
             m_AlertGraceElapsedTime += Time.deltaTime;
         }
@@ -108,21 +114,23 @@ public abstract class Enemy
         m_AlertLevel = Math.Clamp(m_AlertLevel, 0.0f, 1.0f);
         m_MeshMaterial.color= Color.LerpUnclamped(Color.white, Color.red, m_AlertLevel);
 
-        if (m_AlertLevel >= 1.0f)
+        if (m_AlertLevel >= 1.0f && !isAltered)
         {
             Alert(m_GameObject);
         }
     }
 
-    public virtual void IncreaseAlertess(float amount)
+    public virtual void IncreaseAlertess()
     {
-        m_AlertLevel += amount;
+        m_AlertLevel += m_AlertStepAmount;
         m_AlertGraceElapsedTime = 0.0f;
+        m_AlertLevel = Math.Clamp(m_AlertLevel, 0.0f, 1.0f);
     }
 
-    public virtual void DecreaseAlertess(float amount)
+    public virtual void DecreaseAlertess()
     {
-        m_AlertLevel -= amount;
+        m_AlertLevel -= m_AlertStepAmount / 2.0f;
+        m_AlertLevel = Math.Clamp(m_AlertLevel, 0.0f, 1.0f);
     }
 
     private bool IsValidFOVHitTarget(int hitLayer)

@@ -43,9 +43,11 @@ public class GuardIdleState : State
 public class GuardPatrollingState : State
 {
     public NavMeshAgent agent;
-
     private GameObject painting1;
     private GameObject painting2;
+    
+    // Probably better to have something like a blackboard.
+    private Enemy m_Enemy;
 
     public GuardPatrollingState(StateMachine sm, GameObject go)
     {
@@ -55,6 +57,8 @@ public class GuardPatrollingState : State
 
         painting1 = GameObject.Find("Painting");
         painting2 = GameObject.Find("Painting (1)");
+
+        m_Enemy = m_Go.GetComponent<GuardEnemyBehavior>().m_Enemy;
     }
 
     public override void OnEnter()
@@ -83,9 +87,14 @@ public class GuardPatrollingState : State
 
     public override void OnUpdate()
     {
-        agent.speed = 1.0f * GuardEnemyBehavior.speedMult;
+        agent.speed = 1.0f * GuardEnemyBehavior.speedMult; 
 
-        if (agent.remainingDistance <= 1.0f)
+        if (m_Enemy.m_AlertLevel >= 1.0f)
+        {
+            m_Sm.ChangeState(new GuardAlertedState(m_Sm, m_Go, m_Go, m_Enemy));
+        }
+
+        else if (agent.remainingDistance <= 1.0f)
         {
             m_Sm.ChangeState(new GuardIdleState(m_Sm, m_Go));
         }
@@ -97,12 +106,16 @@ public class GuardPatrollingState : State
     }
 }
 
+// Should really be called "Pursuit State" I think..
 public class GuardAlertedState : State
 {
     public NavMeshAgent agent;
     public GameObject m_Alterer;
     private Enemy m_Enemy;
 
+    public GameObject m_Player;
+
+    private bool reachedAlerteredDestination = false;
     public GuardAlertedState(StateMachine sm, GameObject go, GameObject alterer, Enemy enemy)
     {
         m_Go = go;
@@ -120,18 +133,43 @@ public class GuardAlertedState : State
         if (m_Alterer != null)
         {
             agent.speed = 8.0f;
-            agent.SetDestination(m_Alterer.GetComponent<Transform>().transform.position);
+            agent.SetDestination(m_Alterer.transform.position);
         }
+
+        m_Enemy.m_AlertLevel = 1.0f; // lol
+        m_Enemy.isAltered = true;
+        m_Player = GameObject.FindGameObjectWithTag("Player");
     }
 
     public override void OnUpdate()
     {
-        // dk
+        if (!reachedAlerteredDestination)
+        {
+            if (agent.remainingDistance <= 0.5f)
+            {
+                reachedAlerteredDestination = true;
+            }
+            return;
+        }
+
+        if (reachedAlerteredDestination && m_Enemy.IsPlayerInFOV)
+        {
+            agent.speed = 4.0f;
+            agent.SetDestination(m_Player.transform.position);
+        }
+        else
+        {
+            m_Enemy.DecreaseAlertess();
+            if (m_Enemy.m_AlertLevel == 0.0f)
+            {
+                m_Sm.ChangeState(new GuardPatrollingState(m_Sm, m_Go));
+            }
+        }
     }
 
     public override void OnExit()
     {
-
+        m_Enemy.isAltered = false;
     }
 }
 public class GuardDistractedState : State
@@ -191,13 +229,13 @@ public class GuardEnemy : Enemy
     }
     public override void Alert(GameObject alerter)
     {
+        if (isAltered)
+            return;
+
         Enemy enemy = m_GameObject.GetComponent<GuardEnemyBehavior>().m_Enemy; // lol
         m_EnemyStateMachine.ChangeState(new GuardAlertedState(m_EnemyStateMachine, m_GameObject, alerter, enemy));
     }
-    public override void Noise(float noiselevel)
-    {
 
-    }
     public override void Jailbreak(int playerLevel, float stunTime)
     {
 

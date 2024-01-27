@@ -100,6 +100,8 @@ public class CameraPatrollingState : State
     }
 }
 
+
+// Should really be called "Pursuit State" I think..
 public class CameraAlertedState : State
 {
     public GameObject m_Alterer;
@@ -121,6 +123,7 @@ public class CameraAlertedState : State
         // but has a large radius of notifying nearby guards when alerted.
         float range = 40.0f;
         m_Enemy.AlertGuardsInVicinity(m_Alterer, range);
+        m_Enemy.isAltered = true;
         m_PlayerObject = GameObject.FindWithTag("Player");
     }
 
@@ -128,11 +131,21 @@ public class CameraAlertedState : State
     {
         // Just keep looking at player?
         m_Go.transform.LookAt(m_PlayerObject.transform);
+
+        if (!m_Enemy.IsPlayerInFOV)
+        {
+            m_Enemy.DecreaseAlertess();
+            if (m_Enemy.m_AlertLevel == 0.0f)
+            {
+                Vector3 forward = ((CameraEnemy)m_Enemy).m_InitialForward;
+                m_Sm.ChangeState(new CameraPatrollingState(m_Sm, m_Go, forward));
+            }
+        }
     }
 
     public override void OnExit()
     {
-
+        m_Enemy.isAltered = false;
     }
 }
 public class CameraDistractedState : State
@@ -168,18 +181,18 @@ public class CameraDistractedState : State
 }
 public class CameraEnemy : Enemy
 {
-    public Vector3 m_InitialFoward;
+    public Vector3 m_InitialForward;
 
     public CameraEnemy(GameObject go, Material fovMaterial) 
         : base(go, fovMaterial)
     {
         m_EnemyStateMachine = new StateMachine();
         m_GameObject = go;
-        m_InitialFoward = m_GameObject.transform.forward;
+        m_InitialForward = m_GameObject.transform.forward;
     }
     public override void Start()
     {
-        m_EnemyStateMachine.ChangeState(new CameraPatrollingState(m_EnemyStateMachine, m_GameObject, m_InitialFoward));
+        m_EnemyStateMachine.ChangeState(new CameraPatrollingState(m_EnemyStateMachine, m_GameObject, m_InitialForward));
     }
 
     public override void Update()
@@ -201,12 +214,11 @@ public class CameraEnemy : Enemy
     }
     public override void Alert(GameObject alerter)
     {
+        if (isAltered)
+            return;
+
         m_EnemyStateMachine.ChangeState(new CameraAlertedState(m_EnemyStateMachine, m_GameObject,
             alerter, m_GameObject.GetComponent<CameraEnemyBehavior>().m_Enemy));
-    }
-    public override void Noise(float noiselevel)
-    {
-
     }
     public override void Jailbreak(int playerLevel, float stunTime)
     {
