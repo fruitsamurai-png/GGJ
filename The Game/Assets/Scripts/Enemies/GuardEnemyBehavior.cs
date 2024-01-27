@@ -71,7 +71,7 @@ public class GuardPatrollingState : State
             Vector3 p = m_Go.GetComponent<Transform>().position;
             float sqrLen1 = (p1 - p).sqrMagnitude;
             float sqrLen2 = (p2 - p).sqrMagnitude;
-            agent.speed = 1.0f;
+            agent.speed = 1.0f * GuardEnemyBehavior.speedMult;
 
             // For now always path to the further of the two paintings
             if (sqrLen1 > sqrLen2)
@@ -132,7 +132,7 @@ public class GuardAlertedState : State
         // Maybe shouldn't path there
         if (m_Alterer != null)
         {
-            agent.speed = 8.0f;
+            agent.speed = 8.0f * GuardEnemyBehavior.speedMult;
             agent.SetDestination(m_Alterer.transform.position);
         }
 
@@ -154,7 +154,7 @@ public class GuardAlertedState : State
 
         if (reachedAlerteredDestination && m_Enemy.IsPlayerInFOV)
         {
-            agent.speed = 4.0f;
+            agent.speed = 4.0f * GuardEnemyBehavior.speedMult;
             agent.SetDestination(m_Player.transform.position);
         }
         else
@@ -188,7 +188,7 @@ public class GuardDistractedState : State
     {
         if (m_Alterer != null)
         {
-            agent.speed = 8.0f;
+            agent.speed = 8.0f * GuardEnemyBehavior.speedMult;
             agent.SetDestination(m_Alterer.GetComponent<Transform>().transform.position);
         }
     }
@@ -220,6 +220,19 @@ public class GuardEnemy : Enemy
     {
         IsPlayerInFOV = false;
         DrawFOVCone();
+
+        if (m_IsStunned)
+        {
+            GuardEnemyBehavior.speedMult = 0.0f;
+            m_StunnedDuration -= Time.deltaTime;
+            m_StunnedDuration = Mathf.Max(0.0f, m_StunnedDuration);
+            m_IsStunned = (m_StunnedDuration != 0.0f);
+            if(!m_IsStunned)
+            {
+                GuardEnemyBehavior.speedMult = 1.0f;
+            }
+        }
+
         UpdateAlertness();
         m_EnemyStateMachine.Update();
     }
@@ -232,13 +245,7 @@ public class GuardEnemy : Enemy
         Enemy enemy = m_GameObject.GetComponent<GuardEnemyBehavior>().m_Enemy; // lol
         m_EnemyStateMachine.ChangeState(new GuardAlertedState(m_EnemyStateMachine, m_GameObject, alerter, enemy));
     }
-
-    public override void Jailbreak(int playerLevel, float stunTime)
-    {
-
-    }
 }
-
 
 public class GuardEnemyBehavior : MonoBehaviour
 {

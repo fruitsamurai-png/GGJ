@@ -200,7 +200,16 @@ public class CameraEnemy : Enemy
         IsPlayerInFOV = false;
         DrawFOVCone();
         UpdateAlertness();
-        m_EnemyStateMachine.Update();
+        if (m_IsStunned)
+        {
+            m_StunnedDuration -= Time.deltaTime;
+            m_StunnedDuration = Mathf.Max(0.0f, m_StunnedDuration);
+            m_IsStunned = (m_StunnedDuration != 0.0f);
+        }
+        else
+        {
+            m_EnemyStateMachine.Update();
+        }
     }
     public override void NotifyDistraction(GameObject distraction)
     {
@@ -216,10 +225,6 @@ public class CameraEnemy : Enemy
     {
         m_EnemyStateMachine.ChangeState(new CameraAlertedState(m_EnemyStateMachine, m_GameObject,
             alerter, m_GameObject.GetComponent<CameraEnemyBehavior>().m_Enemy));
-    }
-    public override void Jailbreak(int playerLevel, float stunTime)
-    {
-
     }
 }
 
@@ -238,6 +243,24 @@ public class CameraEnemyBehavior : MonoBehaviour
     void Update()
     {
         m_Enemy.Update();
+
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    string[] layerMask = { "Default", "Guards" };
+
+        //    foreach (Collider c in Physics.OverlapSphere(transform.position, 1000.0f, LayerMask.GetMask(layerMask)))
+        //    {
+        //        GameObject o = c.gameObject;
+        //        if (o.TryGetComponent(out CameraEnemyBehavior ceb))
+        //        {
+        //            ceb.m_Enemy.Jailbreak(99, 1.0f);
+        //        }
+        //        if (o.TryGetComponent(out GuardEnemyBehavior geb))
+        //        {
+        //            geb.m_Enemy.Jailbreak(99, 1.0f);
+        //        }
+        //    }
+        //}
     }
 
 }

@@ -17,8 +17,8 @@ public class TrashBin : MonoBehaviour
 
 	// Update is called once per frame
 	void Update()
-	{
-	}
+    {
+    }
 
 	public void Knockover(GameObject interactor)
 	{

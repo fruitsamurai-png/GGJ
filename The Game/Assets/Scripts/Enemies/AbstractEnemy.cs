@@ -13,28 +13,34 @@ public abstract class Enemy
     public StateMachine m_EnemyStateMachine;
     public GameObject m_GameObject;
 
+    public GameObject m_PlayerObject;
+    public bool IsPlayerInFOV = false;
+
+    // FOV
     public LineRenderer m_LineRenderer;
     public float m_Fov = 30.0f;
     public float m_ViewDistance = 5.0f;
     private int FOVLayerExcludeMask = 0;
 
+    // Alert
+    public bool isAltered = false;
     public float m_AlertLevel = 0.0f;
     public float m_AlertGraceElapsedTime = 0.0f;
     public float m_AlertStepAmount = 0.001f;
     public readonly float m_AlertGracePeriod = 2.0f;
-
     public Material m_MeshMaterial;
 
-    public GameObject m_PlayerObject;
-    public bool IsPlayerInFOV = false;
-    public bool isAltered = false;
+    // Stunned
+    public int m_Level = 1;
+    public bool m_IsStunned = false;
+    public float m_StunnedDuration = 1.0f;
 
     protected Enemy(GameObject gameObject, Material fovMaterial)
     {
         m_GameObject = gameObject;
         m_LineRenderer = m_GameObject.GetComponent<LineRenderer>();
 
-        if(m_LineRenderer == null)
+        if (m_LineRenderer == null)
         {
             m_GameObject.AddComponent<LineRenderer>();
         }
@@ -57,9 +63,17 @@ public abstract class Enemy
     // Gameplay enemy interface
     public abstract void NotifyDistraction(GameObject distraction);// - will be called by distractions the player activated.
     public abstract void Alert(GameObject alerter);// - will be called by other enemies when they are alerted to also alert this enemy.
-    public abstract void Jailbreak(int playerLevel, float stunTime);// - stuns the enemy for specified stun time if the playerLevel is >= enemy level.
-
+    
     // Virtual so can override for specialized behavior, unsure if needed
+    public virtual void Jailbreak(int playerLevel, float stunTime)// - stuns the enemy for specified stun time if the playerLevel is >= enemy level.
+    {
+        if (playerLevel >= m_Level)
+        {
+            m_IsStunned = true;
+            // += here in case we can stack stun durations
+            m_StunnedDuration += stunTime;
+        }
+    }
     public virtual void Noise(float noiselevel)
     {
         // - will be called by the player when nearby this enemy and making noise, refer to mechanics on what this does.
@@ -99,9 +113,13 @@ public abstract class Enemy
             }
         }
 
-        if (IsPlayerInFOV)
+        if (IsPlayerInFOV && !m_IsStunned)
         {
             IncreaseAlertess();
+            if (m_AlertLevel >= 1.0f && !isAltered)
+            {
+                Alert(m_GameObject);
+            }
         }
         else
         {
@@ -112,12 +130,13 @@ public abstract class Enemy
             m_AlertGraceElapsedTime += Time.deltaTime;
         }
 
-        m_AlertLevel = Math.Clamp(m_AlertLevel, 0.0f, 1.0f);
-        m_MeshMaterial.color= Color.LerpUnclamped(Color.white, Color.red, m_AlertLevel);
-
-        if (m_AlertLevel >= 1.0f && !isAltered)
+        if (m_IsStunned)
         {
-            Alert(m_GameObject);
+            m_MeshMaterial.color = Color.yellow;
+        }
+        else
+        {
+            m_MeshMaterial.color= Color.LerpUnclamped(Color.white, Color.red, m_AlertLevel);
         }
     }
 
