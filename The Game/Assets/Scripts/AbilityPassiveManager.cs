@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class AbilityManager : MonoBehaviour
+public class AbilityPassiveManager : MonoBehaviour
 {
     public int AILevel = 0;
 }

@@ -12,13 +12,11 @@ public class PlayerMovement : MonoBehaviour
 	private float sprintSpd = 10.0f;
 	private CharacterController cc;
 	private bool sprintToggle = false;
-	private AbilityManager abilityManager;
 	private bool canunlock = false;
 	// Start is called before the first frame update
 	void Start()
 	{
 		cc = GetComponent<CharacterController>();
-        abilityManager=GetComponent<AbilityManager>();
 
     }
 
@@ -81,7 +79,8 @@ public class PlayerMovement : MonoBehaviour
         }
         if (closestInteractable.TryGetComponent(out SecurityLock loc))
         {
-            canunlock=loc.Jailbreak(abilityManager.AILevel);
+			MasterManagers mm = MasterManagers.instance;
+			canunlock =loc.Jailbreak(mm.abilityManager.AILevel);
             return;
         }
     }

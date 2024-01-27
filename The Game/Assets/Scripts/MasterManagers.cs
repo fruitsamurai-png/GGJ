@@ -5,7 +5,7 @@ using UnityEngine;
 public class MasterManagers : MonoBehaviour
 {
     public static MasterManagers instance;
-    public AbilityManager abilityManager;
+    public AbilityPassiveManager abilityManager;
     private void Awake()
     {
         if (instance && instance != this)
@@ -13,6 +13,6 @@ public class MasterManagers : MonoBehaviour
         else
             instance = this;
 
-        abilityManager = GetComponent<AbilityManager>();
+        abilityManager = GetComponent<AbilityPassiveManager>();
     }
 }
