@@ -10,12 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3355a94b0ba1c10429904dd2a6b32dd0, type: 3}
-  m_Name: Jail Break
+  m_Name: JailBreak
   m_EditorClassIdentifier: 
-  abilityName: 
-  cd: 0
+  abilityName: JailBreak
+  cd: 3
   activeDur: 0
-  queryRadius: 1.5
+  queryRadius: 2
   enemyStunDur: 1.5
-  transform: {fileID: 0}
   playerLayer: 3

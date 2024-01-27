@@ -15,4 +15,4 @@ MonoBehaviour:
   abilityName: Neural Network
   cd: 3
   activeDur: 1
-  slowMult: 0
+  slowMult: 0.4
