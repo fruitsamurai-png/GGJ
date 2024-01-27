@@ -12,7 +12,6 @@ public class PlayerMovement : MonoBehaviour
 	private float sprintSpd = 10.0f;
 	private CharacterController cc;
 	private bool sprintToggle = false;
-	private bool interact;
 
 	// Start is called before the first frame update
 	void Start()
@@ -74,5 +73,10 @@ public class PlayerMovement : MonoBehaviour
 			trashbin.Knockover(gameObject);
 			return;
 		}
-	}
+        if (closestInteractable.TryGetComponent(out LightSwitch light))
+        {
+			light.TriggerSwitch();
+            return;
+        }
+    }
 }

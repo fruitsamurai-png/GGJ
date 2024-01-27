@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 9147838833917046811}
   - component: {fileID: 9147838833917046810}
   - component: {fileID: 984356546}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: LightSwitch
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
