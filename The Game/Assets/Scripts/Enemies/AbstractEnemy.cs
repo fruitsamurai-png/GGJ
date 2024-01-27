@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 
 public abstract class Enemy
@@ -14,6 +16,7 @@ public abstract class Enemy
     public LineRenderer m_LineRenderer;
     public float m_Fov = 30.0f;
     public float m_ViewDistance = 5.0f;
+    private int FOVLayerExcludeMask = 0;
 
     public float m_AlertLevel = 0.0f;
     public readonly float m_AlertGracePeriod = 2.0f;
@@ -41,6 +44,9 @@ public abstract class Enemy
 
         m_MeshMaterial = m_GameObject.GetComponent<MeshRenderer>().material;
         m_PlayerObject = GameObject.FindGameObjectWithTag("Player");
+
+        FOVLayerExcludeMask |= LayerMask.NameToLayer("Guards");
+        FOVLayerExcludeMask |= LayerMask.NameToLayer("Player");
     }
 
     public abstract void Start();
@@ -51,7 +57,27 @@ public abstract class Enemy
     public abstract void Alert(GameObject alerter);// - will be called by other enemies when they are alerted to also alert this enemy.
     public abstract void Noise(float noiselevel);// - will be called by the player when nearby this enemy and making noise, refer to mechanics on what this does.
     public abstract void Jailbreak(int playerLevel, float stunTime);// - stuns the enemy for specified stun time if the playerLevel is >= enemy level.
+    
+    public virtual void AlertGuardsInVicinity(GameObject alerter, float radius)
+    {
+        foreach (Collider c in Physics.OverlapSphere(m_GameObject.transform.position, radius, LayerMask.GetMask("Guards")))
+        {
+            GameObject o = c.gameObject;
+            if (o == m_GameObject)
+                continue;
 
+            if (o.TryGetComponent(out GuardEnemyBehavior guardEnemyBehavior))
+            {
+                guardEnemyBehavior.m_Enemy.Alert(alerter);
+            }
+
+            // Do we inform other cameras?
+            else if (o.TryGetComponent(out CameraEnemyBehavior cameraEnemyBehavior))
+            {
+                cameraEnemyBehavior.m_Enemy.Alert(alerter);
+            }
+        }
+    }
 
     public virtual void UpdateAlertness()
     {
@@ -81,6 +107,11 @@ public abstract class Enemy
 
         m_AlertLevel = Math.Clamp(m_AlertLevel, 0.0f, 1.0f);
         m_MeshMaterial.color= Color.LerpUnclamped(Color.white, Color.red, m_AlertLevel);
+
+        if (m_AlertLevel >= 1.0f)
+        {
+            Alert(m_GameObject);
+        }
     }
 
     public virtual void IncreaseAlertess(float amount)
@@ -92,6 +123,14 @@ public abstract class Enemy
     public virtual void DecreaseAlertess(float amount)
     {
         m_AlertLevel -= amount;
+    }
+
+    private bool IsValidFOVHitTarget(int hitLayer)
+    {
+        if (hitLayer == 0)
+            return true;
+
+        return (FOVLayerExcludeMask & hitLayer) == 1;
     }
 
     public virtual void DrawFOVCone()
@@ -121,7 +160,8 @@ public abstract class Enemy
                 bool IsHitPlayer = (hitInfo1.transform.gameObject == m_PlayerObject);
                 IsPlayerInFOV |= IsHitPlayer;
 
-                if (!IsHitPlayer) // Weird to clip cone to player I think
+                bool isValidHit = IsValidFOVHitTarget(hitInfo1.transform.gameObject.layer);
+                if (isValidHit) // Weird to clip cone to player I think
                 {
                     p1 = hitInfo1.point;
                 }
@@ -133,9 +173,10 @@ public abstract class Enemy
             if (hitInfo2.distance < m_ViewDistance)
             {
                 bool IsHitPlayer = (hitInfo2.transform.gameObject == m_PlayerObject);
-                IsPlayerInFOV |= IsHitPlayer; 
+                IsPlayerInFOV |= IsHitPlayer;
 
-                if (!IsHitPlayer) // Weird to clip cone to player I think
+                bool isValidHit = IsValidFOVHitTarget(hitInfo2.transform.gameObject.layer);
+                if (isValidHit) // Weird to clip cone to player I think
                 {
                     p2 = hitInfo2.point;
                 }

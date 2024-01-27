@@ -101,16 +101,21 @@ public class GuardAlertedState : State
 {
     public NavMeshAgent agent;
     public GameObject m_Alterer;
+    private Enemy m_Enemy;
 
-    public GuardAlertedState(StateMachine sm, GameObject go, GameObject alterer)
+    public GuardAlertedState(StateMachine sm, GameObject go, GameObject alterer, Enemy enemy)
     {
         m_Go = go;
         m_Sm = sm;
         agent = go.GetComponent<NavMeshAgent>();
         m_Alterer = alterer;
+        m_Enemy = enemy;
     }
     public override void OnEnter()
     {
+        float range = 10.0f;
+        m_Enemy.AlertGuardsInVicinity(m_Alterer, range);
+
         // Maybe shouldn't path there
         if (m_Alterer != null)
         {
@@ -176,9 +181,9 @@ public class GuardEnemy : Enemy
     public override void Update()
     {
         IsPlayerInFOV = false;
-        m_EnemyStateMachine.Update();
         DrawFOVCone();
         UpdateAlertness();
+        m_EnemyStateMachine.Update();
     }
     public override void NotifyDistraction(GameObject distraction)
     {
@@ -186,7 +191,8 @@ public class GuardEnemy : Enemy
     }
     public override void Alert(GameObject alerter)
     {
-        m_EnemyStateMachine.ChangeState(new GuardAlertedState(m_EnemyStateMachine, m_GameObject, alerter));
+        Enemy enemy = m_GameObject.GetComponent<GuardEnemyBehavior>().m_Enemy; // lol
+        m_EnemyStateMachine.ChangeState(new GuardAlertedState(m_EnemyStateMachine, m_GameObject, alerter, enemy));
     }
     public override void Noise(float noiselevel)
     {
@@ -216,10 +222,6 @@ public class GuardEnemyBehavior : MonoBehaviour
     void Update()
     {
         m_Enemy.Update();
-        m_Enemy.DrawFOVCone();
-        m_Enemy.UpdateAlertness();
-        //string alertLevel = "Guard alert: " + m_Enemy.m_AlertLevel;
-        //text.SetText(alertLevel);
     }
 
 	public void NotifyDistraction(GameObject distraction)

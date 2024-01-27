@@ -44,6 +44,7 @@ public class CameraPatrollingState : State
 
     private Vector3 m_InitialFoward;
 
+    private CameraEnemy m_CameraEnemy; // lol
     public CameraPatrollingState(StateMachine sm, GameObject go, Vector3 forward)
     {
         m_Go = go;
@@ -64,16 +65,26 @@ public class CameraPatrollingState : State
             m_FowardVectors[i + 1] = rotatedVector1;
         }
         m_Go.transform.forward = m_FowardVectors[m_AngleIndex];
+
+        m_CameraEnemy = m_Go.GetComponent<CameraEnemyBehavior>().m_Enemy;
     }
 
     public override void OnUpdate()
     {
-        m_ElapsedTime += Time.deltaTime;
-        if (m_ElapsedTime >= m_DurationBeforeSwitching)
+        if (!m_CameraEnemy.IsPlayerInFOV)
+        {
+            m_ElapsedTime += Time.deltaTime;
+            if (m_ElapsedTime >= m_DurationBeforeSwitching)
+            {
+                m_ElapsedTime = 0.0f;
+                ChangeAngle();
+            }
+        }
+        else
         {
             m_ElapsedTime = 0.0f;
-            ChangeAngle();
         }
+
     }
 
     public override void OnExit()
@@ -93,20 +104,30 @@ public class CameraAlertedState : State
 {
     public GameObject m_Alterer;
 
-    public CameraAlertedState(StateMachine sm, GameObject go, GameObject alterer)
+    private GameObject m_PlayerObject;
+    private Enemy m_Enemy;
+
+    
+    public CameraAlertedState(StateMachine sm, GameObject go, GameObject alterer, Enemy enemy)
     {
         m_Go = go;
         m_Sm = sm;
         m_Alterer = alterer;
+        m_Enemy = enemy;
     }
     public override void OnEnter()
     {
-
+        // Does not pursue the player when alerted,
+        // but has a large radius of notifying nearby guards when alerted.
+        float range = 40.0f;
+        m_Enemy.AlertGuardsInVicinity(m_Alterer, range);
+        m_PlayerObject = GameObject.FindWithTag("Player");
     }
 
     public override void OnUpdate()
     {
-
+        // Just keep looking at player?
+        m_Go.transform.LookAt(m_PlayerObject.transform);
     }
 
     public override void OnExit()
@@ -136,7 +157,7 @@ public class CameraDistractedState : State
         if (m_ElapsedTime > m_DistractedDuration)
         {
             CameraEnemy cameraEnemy = m_Go.GetComponent<CameraEnemyBehavior>().m_Enemy;
-            m_Sm.ChangeState(new CameraPatrollingState(m_Sm, m_Go, cameraEnemy.m_InitialFoward));
+            m_Sm.ChangeState(new CameraAlertedState(m_Sm, m_Go, m_Go, cameraEnemy));
         }
     }
 
@@ -164,9 +185,9 @@ public class CameraEnemy : Enemy
     public override void Update()
     {
         IsPlayerInFOV = false;
-        m_EnemyStateMachine.Update();
         DrawFOVCone();
         UpdateAlertness();
+        m_EnemyStateMachine.Update();
     }
     public override void NotifyDistraction(GameObject distraction)
     {
@@ -180,7 +201,8 @@ public class CameraEnemy : Enemy
     }
     public override void Alert(GameObject alerter)
     {
-
+        m_EnemyStateMachine.ChangeState(new CameraAlertedState(m_EnemyStateMachine, m_GameObject,
+            alerter, m_GameObject.GetComponent<CameraEnemyBehavior>().m_Enemy));
     }
     public override void Noise(float noiselevel)
     {

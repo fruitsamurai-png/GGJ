@@ -220,8 +220,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b27a7b073eed1e84ab382f97104cf785, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AlertLevelUI: {fileID: 4565111228760550760, guid: 93a0f1a1e9a15404ca5b7bae3e1842c2,
-    type: 3}
   fovMaterial: {fileID: 2100000, guid: 8817b244da8426b49968d6ebf3edf448, type: 2}
 --- !u!195 &489966971
 NavMeshAgent:
