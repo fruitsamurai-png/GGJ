@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
 	private int noiseGen = 1; // noise added by sprint
 	[SerializeField]
 	private float noiseRadius = 5.0f; // noise detection radius
-
+	bool collided = false;
 
 	private CharacterController cc;
 	private bool sprintToggle = false;
@@ -65,14 +65,48 @@ public class PlayerMovement : MonoBehaviour
 
         cc.SimpleMove(movement * spd);
 
+		CheckforGuards();
 
-		if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
 		{
 			InteractNearby();
 		}
 	}
+    private void CheckforGuards()
+    {
+        float interactRange = 0.5f;
+        float closestDistance = 10000f;
+        GameObject closestEnemy = null;
 
-	void InteractNearby()
+        //Get the interactables within range and get the closest
+        foreach (Collider c in Physics.OverlapSphere(transform.position, interactRange, LayerMask.GetMask("Guards")))
+        {
+            GameObject o = c.gameObject;
+            float dist = Vector3.Distance(o.transform.position, transform.position);
+            if (dist < closestDistance)
+            {
+                closestDistance = dist;
+                closestEnemy = o;
+            }
+        }
+
+        //Exit out if there was no interactable found
+        if (closestEnemy == null)
+        {
+            return;
+        }
+		if(closestEnemy.TryGetComponent(out SecurityBotEnemyBehavior sec))
+		{
+            collided=sec.m_Enemy.isAltered;
+			return;
+        }
+        if (closestEnemy.TryGetComponent(out GuardEnemyBehavior gua))
+        {
+            collided= gua.m_Enemy.isAltered;
+            return;
+        }
+    }
+    void InteractNearby()
 	{
 		float interactRange = 1.5f;
 		float closestDistance = 10000f;
