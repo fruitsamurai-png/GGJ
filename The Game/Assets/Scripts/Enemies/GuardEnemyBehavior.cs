@@ -58,7 +58,14 @@ public class GuardPatrollingState : State
         painting1 = GameObject.Find("Painting");
         painting2 = GameObject.Find("Painting (1)");
 
-        m_Enemy = m_Go.GetComponent<GuardEnemyBehavior>().m_Enemy;
+        if (m_Go.TryGetComponent(out GuardEnemyBehavior geb))
+        {
+            m_Enemy = geb.m_Enemy;
+        }
+        else if (m_Go.TryGetComponent(out SecurityBotEnemyBehavior sbeb))
+        {
+            m_Enemy = sbeb.m_Enemy;
+        }
     }
 
     public override void OnEnter()
@@ -152,7 +159,7 @@ public class GuardAlertedState : State
             return;
         }
 
-        if (reachedAlerteredDestination && m_Enemy.IsPlayerInFOV)
+        if (reachedAlerteredDestination && m_Enemy.m_IsPlayerInFOV)
         {
             agent.speed = 4.0f * GuardEnemyBehavior.speedMult;
             agent.SetDestination(m_Player.transform.position);
@@ -218,7 +225,7 @@ public class GuardEnemy : Enemy
 
     public override void Update()
     {
-        IsPlayerInFOV = false;
+        m_IsPlayerInFOV = false;
         DrawFOVCone();
 
         if (m_IsStunned)
@@ -242,8 +249,21 @@ public class GuardEnemy : Enemy
     }
     public override void Alert(GameObject alerter)
     {
-        Enemy enemy = m_GameObject.GetComponent<GuardEnemyBehavior>().m_Enemy; // lol
-        m_EnemyStateMachine.ChangeState(new GuardAlertedState(m_EnemyStateMachine, m_GameObject, alerter, enemy));
+        Enemy enemy = null;
+        
+        if (m_GameObject.TryGetComponent(out GuardEnemyBehavior geb))
+        {
+            enemy = geb.m_Enemy;
+        }
+
+        if (m_GameObject.TryGetComponent(out SecurityBotEnemyBehavior sbeb))
+        {
+            enemy = sbeb.m_Enemy;
+        }
+        if (!enemy.isAltered)
+        {
+            m_EnemyStateMachine.ChangeState(new GuardAlertedState(m_EnemyStateMachine, m_GameObject, alerter, enemy));
+        }
     }
 }
 

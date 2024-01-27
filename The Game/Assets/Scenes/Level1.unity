@@ -876,7 +876,7 @@ GameObject:
   - component: {fileID: 1934293950}
   - component: {fileID: 1934293949}
   - component: {fileID: 1934293948}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1189,7 +1189,7 @@ PrefabInstance:
     - target: {fileID: 1586621234878737750, guid: 3cd2751e4a5c38047964d38466506158,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4041055669044148227, guid: 3cd2751e4a5c38047964d38466506158,
         type: 3}

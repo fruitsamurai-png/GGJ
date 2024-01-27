@@ -71,7 +71,7 @@ public class CameraPatrollingState : State
 
     public override void OnUpdate()
     {
-        if (!m_CameraEnemy.IsPlayerInFOV)
+        if (!m_CameraEnemy.m_IsPlayerInFOV)
         {
             m_ElapsedTime += Time.deltaTime;
             if (m_ElapsedTime >= m_DurationBeforeSwitching)
@@ -132,7 +132,7 @@ public class CameraAlertedState : State
         // Just keep looking at player?
         m_Go.transform.LookAt(m_PlayerObject.transform);
 
-        if (!m_Enemy.IsPlayerInFOV)
+        if (!m_Enemy.m_IsPlayerInFOV)
         {
             m_Enemy.DecreaseAlertess();
             if (m_Enemy.m_AlertLevel == 0.0f)
@@ -197,7 +197,7 @@ public class CameraEnemy : Enemy
 
     public override void Update()
     {
-        IsPlayerInFOV = false;
+        m_IsPlayerInFOV = false;
         DrawFOVCone();
         UpdateAlertness();
         if (m_IsStunned)
