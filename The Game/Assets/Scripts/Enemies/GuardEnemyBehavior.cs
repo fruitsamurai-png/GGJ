@@ -43,28 +43,30 @@ public class GuardPatrollingState : State
 {
     public NavMeshAgent agent;
 
+    private GameObject painting1;
+    private GameObject painting2;
+
     public GuardPatrollingState(StateMachine sm, GameObject go)
     {
         m_Go = go;
         m_Sm = sm;
         agent = go.GetComponent<NavMeshAgent>();
+
+        painting1 = GameObject.Find("Painting");
+        painting2 = GameObject.Find("Painting (1)");
     }
 
     public override void OnEnter()
     {
-        GameObject painting1 = GameObject.Find("Painting");
-        GameObject painting2 = GameObject.Find("Painting (1)");
-
-        // Check if the GameObjects are found before accessing their transforms
         if (painting1 != null && painting2 != null)
         {
-            // Access the Transform components
             Vector3 p1 = painting1.transform.position;
             Vector3 p2 = painting2.transform.position;
 
             Vector3 p = m_Go.GetComponent<Transform>().position;
             float sqrLen1 = (p1 - p).sqrMagnitude;
             float sqrLen2 = (p2 - p).sqrMagnitude;
+            agent.speed = 1.0f;
 
             // For now always path to the further of the two paintings
             if (sqrLen1 > sqrLen2)
@@ -80,7 +82,6 @@ public class GuardPatrollingState : State
 
     public override void OnUpdate()
     {
-        Debug.Log("Agent path status: " + agent.pathStatus + "Distance remaining: " + agent.remainingDistance);
         if (agent.remainingDistance <= 1.0f)
         {
             m_Sm.ChangeState(new GuardIdleState(m_Sm, m_Go));
@@ -89,13 +90,45 @@ public class GuardPatrollingState : State
 
     public override void OnExit()
     {
-        Debug.Log("Guard patrolling state on exit!");
+
     }
 }
 
+public class GuardAlertedState : State
+{
+    public NavMeshAgent agent;
+    public GameObject m_Alterer;
+
+    public GuardAlertedState(StateMachine sm, GameObject go, GameObject alterer)
+    {
+        m_Go = go;
+        m_Sm = sm;
+        agent = go.GetComponent<NavMeshAgent>();
+
+        m_Alterer = alterer;
+    }
+    public override void OnEnter()
+    {
+        if (m_Alterer != null)
+        {
+            agent.speed = 8.0f;
+            agent.SetDestination(m_Alterer.GetComponent<Transform>().transform.position);
+        }
+    }
+
+    public override void OnUpdate()
+    {
+        // dk
+    }
+
+    public override void OnExit()
+    {
+
+    }
+}
 public class GuardEnemy : Enemy
 {
-    public GuardEnemy(GameObject go)
+    public GuardEnemy(GameObject go, Material fovMaterial) : base(go, fovMaterial)
     {
         m_EnemyStateMachine = new StateMachine();
         m_GameObject = go;
@@ -115,7 +148,7 @@ public class GuardEnemy : Enemy
     }
     public override void Alert(GameObject alerter)
     {
-
+        m_EnemyStateMachine.ChangeState(new GuardAlertedState(m_EnemyStateMachine, m_GameObject, alerter));
     }
     public override void Noise(float noiselevel)
     {
@@ -125,8 +158,6 @@ public class GuardEnemy : Enemy
     {
 
     }
-
-    GameObject m_GameObject;
 }
 
 
@@ -134,17 +165,20 @@ public class GuardEnemyBehavior : MonoBehaviour
 {
     // Start is called before the first frame update
 
+    public Material fovMaterial;
+
     void Start()
     {
-        m_GuardEnemy = new GuardEnemy(gameObject);
-        m_GuardEnemy.Start();
+        m_Enemy = new GuardEnemy(gameObject, fovMaterial);
+        m_Enemy.Start();
     }
 
     // Update is called once per frame
     void Update()
     {
-        m_GuardEnemy.Update();
+        m_Enemy.Update();
+        m_Enemy.DrawFOVCone();
     }
 
-    GuardEnemy m_GuardEnemy;
+    public GuardEnemy m_Enemy;
 }
