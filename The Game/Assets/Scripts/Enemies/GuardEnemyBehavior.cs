@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -106,7 +107,38 @@ public class GuardAlertedState : State
         m_Go = go;
         m_Sm = sm;
         agent = go.GetComponent<NavMeshAgent>();
+        m_Alterer = alterer;
+    }
+    public override void OnEnter()
+    {
+        // Maybe shouldn't path there
+        if (m_Alterer != null)
+        {
+            agent.speed = 8.0f;
+            agent.SetDestination(m_Alterer.GetComponent<Transform>().transform.position);
+        }
+    }
 
+    public override void OnUpdate()
+    {
+        // dk
+    }
+
+    public override void OnExit()
+    {
+
+    }
+}
+public class GuardDistractedState : State
+{
+    public NavMeshAgent agent;
+    public GameObject m_Alterer;
+
+    public GuardDistractedState(StateMachine sm, GameObject go, GameObject alterer)
+    {
+        m_Go = go;
+        m_Sm = sm;
+        agent = go.GetComponent<NavMeshAgent>();
         m_Alterer = alterer;
     }
     public override void OnEnter()
@@ -130,7 +162,8 @@ public class GuardAlertedState : State
 }
 public class GuardEnemy : Enemy
 {
-    public GuardEnemy(GameObject go, Material fovMaterial) : base(go, fovMaterial)
+    public GuardEnemy(GameObject go, Material fovMaterial, GameObject m_AlertLevelUIPrefab) 
+        : base(go, fovMaterial, m_AlertLevelUIPrefab)
     {
         m_EnemyStateMachine = new StateMachine();
         m_GameObject = go;
@@ -142,11 +175,14 @@ public class GuardEnemy : Enemy
 
     public override void Update()
     {
+        IsPlayerInFOV = false;
         m_EnemyStateMachine.Update();
+        DrawFOVCone();
+        UpdateAlertness();
     }
     public override void NotifyDistraction(GameObject distraction)
     {
-
+        m_EnemyStateMachine.ChangeState(new GuardDistractedState(m_EnemyStateMachine, m_GameObject, distraction));
     }
     public override void Alert(GameObject alerter)
     {
@@ -165,15 +201,15 @@ public class GuardEnemy : Enemy
 
 public class GuardEnemyBehavior : MonoBehaviour
 {
-    public static float speedMult = 1.0f;
-    // Start is called before the first frame update
-
+    public GameObject m_AlertLevelUI;
     public Material fovMaterial;
-	public GuardEnemy m_Enemy;
+    public GuardEnemy m_Enemy;
+
+    public static float speedMult = 1.0f;
 
 	void Start()
     {
-        m_Enemy = new GuardEnemy(gameObject, fovMaterial);
+        m_Enemy = new GuardEnemy(gameObject, fovMaterial, m_AlertLevelUI);
         m_Enemy.Start();
     }
 
@@ -182,6 +218,9 @@ public class GuardEnemyBehavior : MonoBehaviour
     {
         m_Enemy.Update();
         m_Enemy.DrawFOVCone();
+        m_Enemy.UpdateAlertness();
+        //string alertLevel = "Guard alert: " + m_Enemy.m_AlertLevel;
+        //text.SetText(alertLevel);
     }
 
 	public void NotifyDistraction(GameObject distraction)
