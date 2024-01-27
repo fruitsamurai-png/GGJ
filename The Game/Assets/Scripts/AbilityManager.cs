@@ -26,7 +26,7 @@ public struct Ability
 public class AbilityManager : MonoBehaviour
 {
     private Dictionary<string, Ability> abilities;
-
+    public int AILevel=0;
     // Start is called before the first frame update
     public void UseAbility(string name)
     {
