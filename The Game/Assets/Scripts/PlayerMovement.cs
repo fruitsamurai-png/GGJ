@@ -14,9 +14,11 @@ public class PlayerMovement : MonoBehaviour
     private bool sprintToggle = false;
     private bool interact;
     // Start is called before the first frame update
+
     void Start()
     {
         cc = GetComponent<CharacterController>();
+      
     }
 
     // Update is called once per frame
@@ -32,6 +34,8 @@ public class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(movement, Vector3.up);
 
         cc.SimpleMove(movement * spd);
+
+        sprintToggle = !sprintToggle;
 
         interact = false;
     }
