@@ -30,7 +30,6 @@ public class JailBreak : Ability
                 closestDistance = dist;
                 closestInteractable = o;
             }
-            Debug.Log(o.name);
         }
 
         //Exit out if there was no interactable found

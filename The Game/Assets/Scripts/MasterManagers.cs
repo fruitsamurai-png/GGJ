@@ -6,6 +6,7 @@ public class MasterManagers : MonoBehaviour
 {
     public static MasterManagers instance;
     public AbilityPassiveManager abilityManager;
+
     private void Awake()
     {
         if (instance && instance != this)

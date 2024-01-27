@@ -10,25 +10,56 @@ public class PlayerMovement : MonoBehaviour
 	private float moveSpd = 5.0f;
 	[SerializeField]
 	private float sprintSpd = 10.0f;
+	[SerializeField]
+	private int noiseGen = 1; // noise added by sprint
+	[SerializeField]
+	private float noiseRadius = 5.0f; // noise detection radius
+
+
 	private CharacterController cc;
 	private bool sprintToggle = false;
 	private bool canunlock = false;
 	// Start is called before the first frame update
+
 	void Start()
 	{
+
 		cc = GetComponent<CharacterController>();
 
     }
 
+	void UpdateNoiseForGuards()
+    {
+		var cols = Physics.OverlapSphere(transform.position, noiseRadius, LayerMask.GetMask("Guards"));
+
+		foreach (Collider c in cols)
+		{
+			GuardEnemyBehavior comp = c.gameObject.GetComponent<GuardEnemyBehavior>();
+
+			if(comp)
+            {
+				comp.m_Enemy.Noise(noiseGen); // add to this enemy noise level
+				Debug.Log("Add noise");
+			}
+		}
+
+	}
 	// Update is called once per frame
 	void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.LeftShift))
 			sprintToggle = !sprintToggle;
+
+
 		float spd = sprintToggle ? sprintSpd : moveSpd;
 		float h = Input.GetAxis("Horizontal");
 		float v = Input.GetAxis("Vertical");
 		Vector3 movement = cc.isGrounded ? v * Vector3.forward + h * Vector3.right : Vector3.zero;
+
+		if(sprintToggle && cc.isGrounded)
+        {
+			UpdateNoiseForGuards();
+		}
 
 		if (movement.sqrMagnitude > 0)
 			transform.rotation = Quaternion.LookRotation(movement, Vector3.up);
