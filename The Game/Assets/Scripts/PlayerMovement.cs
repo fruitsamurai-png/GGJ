@@ -168,14 +168,10 @@ public class PlayerMovement : MonoBehaviour
 		Vector3 forward = transform.forward;
 
 		float dp = math.dot(forward, closestInteractable.transform.forward);
-		float episolon = 0.00001f;
 
-		if (Math.Abs(dp) < episolon)
-		{
-            if (dp < 0.0f)
-            {
-                return;
-            }
+        if (dp < -0.1f)
+        {
+            return;
         }
 
         UIInteractPrompt.ShowInteractable(closestInteractable);
