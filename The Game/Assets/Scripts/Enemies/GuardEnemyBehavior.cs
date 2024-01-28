@@ -274,8 +274,8 @@ public class GuardDistractedState : State
 }
 public class GuardEnemy : Enemy
 {
-	public GuardEnemy(GameObject go, Material fovMaterial)
-		: base(go, fovMaterial)
+	public GuardEnemy(GameObject go, EnemyAlertBar enemyAlertBar, Material fovMaterial)
+		: base(go, enemyAlertBar, fovMaterial)
 	{
 		m_EnemyStateMachine = new StateMachine();
 		m_GameObject = go;
@@ -340,7 +340,7 @@ public class GuardEnemyBehavior : MonoBehaviour
 
 	void Start()
 	{
-		m_Enemy = new GuardEnemy(gameObject, fovMaterial);
+		m_Enemy = new GuardEnemy(gameObject, alertBar, fovMaterial);
 		m_Enemy.Start();
 
 	}
@@ -362,16 +362,6 @@ public class GuardEnemyBehavior : MonoBehaviour
 			//{
 			//	tex.TriggerTextSwitch(false);
 			//}
-		}
-
-		if (m_Enemy.m_AlertLevel > 0.01f)
-		{
-			alertBar.gameObject.SetActive(true);
-			alertBar.alertValue = m_Enemy.m_AlertLevel;
-		}
-		else
-		{
-			alertBar.gameObject.SetActive(false);
 		}
 	}
 

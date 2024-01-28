@@ -32,15 +32,19 @@ public abstract class Enemy
     public Material m_MeshMaterial;
     public Color m_OriginalMaterialColor;
 
+    public EnemyAlertBar m_AlertBar;
+
     // Stunned
     public int m_Level = 1;
     public bool m_IsStunned = false;
     public float m_StunnedDuration = 1.0f;
 
     private Mesh fovMesh;
-    protected Enemy(GameObject gameObject, Material fovMaterial)
+    protected Enemy(GameObject gameObject, EnemyAlertBar enemyAlertBar, Material fovMaterial)
     {
         m_GameObject = gameObject;
+        m_AlertBar = enemyAlertBar;
+
         m_LineRenderer = m_GameObject.GetComponent<LineRenderer>();
         fovMesh = GameObject.Find("Fov").GetComponent<MeshFilter>().mesh;
         if (m_LineRenderer == null)
@@ -144,6 +148,13 @@ public abstract class Enemy
         {
             m_MeshMaterial.color = Color.LerpUnclamped(m_OriginalMaterialColor, Color.red, m_AlertLevel);
         }
+
+        UpdateAlertbar();
+    }
+    public virtual void UpdateAlertbar()
+    {
+        m_AlertBar.alertValue = m_AlertLevel;
+        m_AlertBar.gameObject.SetActive(m_AlertLevel > 0.01f);
     }
 
     public virtual void IncreaseAlertess()

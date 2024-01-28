@@ -7,8 +7,8 @@ public class SecurityBotEnemy : GuardEnemy
     public bool InRange = false;
     public bool RayHit = false;
 
-    public SecurityBotEnemy(GameObject go, Material fovMaterial)
-        : base(go, fovMaterial)
+    public SecurityBotEnemy(GameObject go, EnemyAlertBar enemyAlertBar, Material fovMaterial)
+        : base(go, enemyAlertBar, fovMaterial)
     {
     }
 
@@ -63,6 +63,7 @@ public class SecurityBotEnemy : GuardEnemy
         {
             m_MeshMaterial.color = Color.LerpUnclamped(m_OriginalMaterialColor, Color.red, m_AlertLevel);
         }
+        UpdateAlertbar();
     }
 }
 
@@ -72,10 +73,12 @@ public class SecurityBotEnemyBehavior : MonoBehaviour
     public SecurityBotEnemy m_Enemy;
     GameObject childGameObject;
 
+    public EnemyAlertBar alertBar;
+
     // Start is called before the first frame update
     void Start()
     {
-        m_Enemy = new SecurityBotEnemy(gameObject, fovMaterial);
+        m_Enemy = new SecurityBotEnemy(gameObject, alertBar, fovMaterial);
         m_Enemy.m_Fov = 360.0f;
         m_Enemy.m_ViewDistance = 10.0f;
         m_Enemy.Start();
@@ -90,6 +93,7 @@ public class SecurityBotEnemyBehavior : MonoBehaviour
     void Update()
     {
         m_Enemy.Update();
+
         if (m_Enemy.isAltered)
         {
             if (childGameObject.TryGetComponent(out TextBubble tex))

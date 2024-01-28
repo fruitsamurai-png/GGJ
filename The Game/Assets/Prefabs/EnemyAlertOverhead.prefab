@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bar: {fileID: 1776313191864739236}
-  alertValue: 0
+  alertValue: 0.9995
 --- !u!1 &7181555818517407717
 GameObject:
   m_ObjectHideFlags: 0
