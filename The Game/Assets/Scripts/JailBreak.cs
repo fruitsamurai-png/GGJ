@@ -49,6 +49,12 @@ public class JailBreak : Ability
             behavior.m_Enemy.Jailbreak(AbilityPassiveManager.AILevel, enemyStunDur);
             return;
         }
+        if (closestInteractable.TryGetComponent(out SecurityBotEnemyBehavior sbeb))
+        {
+            MasterManagers mm = MasterManagers.instance;
+            sbeb.m_Enemy.Jailbreak(AbilityPassiveManager.AILevel, enemyStunDur);
+            return;
+        }
         
     }
 }
