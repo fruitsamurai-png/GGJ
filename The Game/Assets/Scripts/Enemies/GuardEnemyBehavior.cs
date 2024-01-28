@@ -267,14 +267,15 @@ public class GuardDistractedState : State
 public class GuardEnemy : Enemy
 {
 	public List<Vector3> m_Interactables;
-
+	private NavMeshAgent agent;
+	private float speedTemp;
 	public GuardEnemy(GameObject go, EnemyAlertBar enemyAlertBar, GameObject fovPrebInstance)
 		: base(go, enemyAlertBar, fovPrebInstance)
 	{
 		m_EnemyStateMachine = new StateMachine();
 		m_GameObject = go;
 		m_Interactables = new List<Vector3>();
-
+		agent = go.GetComponent<NavMeshAgent>();
 		foreach (GameObject interactable in GameObject.FindGameObjectsWithTag("Interactable"))
 		{
 			m_Interactables.Add(interactable.transform.position);
@@ -293,13 +294,22 @@ public class GuardEnemy : Enemy
 
 		if (m_IsStunned)
 		{
-			GuardEnemyBehavior.speedMult = 0.0f;
+			//GuardEnemyBehavior.speedMult = 0.0f;
+			agent.isStopped = true;
+			if(GuardEnemyBehavior.speedMult != 0 && speedTemp == 0.0f) // store speed if first stunned
+            {
+				speedTemp = agent.speed / GuardEnemyBehavior.speedMult;
+			}
+			agent.speed = 0;
 			m_StunnedDuration -= Time.deltaTime;
 			m_StunnedDuration = Mathf.Max(0.0f, m_StunnedDuration);
 			m_IsStunned = (m_StunnedDuration != 0.0f);
-			if (!m_IsStunned)
-			{
-				GuardEnemyBehavior.speedMult = 1.0f;
+            if (!m_IsStunned) 
+            {
+				agent.isStopped = false;
+				agent.speed = speedTemp;
+				speedTemp = 0.0f; // reset
+				//GuardEnemyBehavior.speedMult = 1.0f;
 			}
 		}
 
