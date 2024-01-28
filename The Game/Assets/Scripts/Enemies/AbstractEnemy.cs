@@ -7,21 +7,19 @@ using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
 
-
 public abstract class Enemy
 {
     public StateMachine m_EnemyStateMachine;
     public GameObject m_GameObject;
+
 
     public GameObject m_PlayerObject;
     public bool m_IsPlayerInFOV = false;
     public float m_GroundLevel = 1.0f;
 
     // FOV
-    public LineRenderer m_LineRenderer;
     public float m_Fov = 60.0f;
     public float m_ViewDistance = 5.0f;
-    private int FOVLayerExcludeMask = 0;
 
     // Alert
     public bool isAltered = false;
@@ -40,29 +38,18 @@ public abstract class Enemy
     public float m_StunnedDuration = 1.0f;
 
     private Mesh fovMesh;
-    protected Enemy(GameObject gameObject, EnemyAlertBar enemyAlertBar, Material fovMaterial)
+    private List<Vector3> newVertices = new List<Vector3>();
+    private List<int> newTriangles = new List<int>();
+    protected Enemy(GameObject gameObject, EnemyAlertBar enemyAlertBar , GameObject fovGameObject)
     {
         m_GameObject = gameObject;
+
         m_AlertBar = enemyAlertBar;
-
-        m_LineRenderer = m_GameObject.GetComponent<LineRenderer>();
-        fovMesh = GameObject.Find("Fov").GetComponent<MeshFilter>().mesh;
-        if (m_LineRenderer == null)
-        {
-            m_GameObject.AddComponent<LineRenderer>();
-        }
-
-        m_LineRenderer.useWorldSpace = true;
-        m_LineRenderer.positionCount = 4;
-        m_LineRenderer.widthMultiplier = 0.04f;
-        m_LineRenderer.material = fovMaterial;
+        fovMesh = fovGameObject.GetComponent<MeshFilter>().mesh;
 
         m_MeshMaterial = m_GameObject.GetComponent<MeshRenderer>().material;
         m_OriginalMaterialColor = m_MeshMaterial.color;
         m_PlayerObject = GameObject.FindGameObjectWithTag("Player");
-
-        FOVLayerExcludeMask |= LayerMask.NameToLayer("Guards");
-        FOVLayerExcludeMask |= LayerMask.NameToLayer("Player");
     }
 
     public abstract void Start();
@@ -169,30 +156,19 @@ public abstract class Enemy
         m_AlertLevel -= m_AlertStepAmount / 2.0f;
         m_AlertLevel = Math.Clamp(m_AlertLevel, 0.0f, 1.0f);
     }
-
-    private bool IsValidFOVHitTarget(int hitLayer)
-    {
-        if (hitLayer == 0)
-            return true;
-
-        return (FOVLayerExcludeMask & hitLayer) == 1;
-    }
-   
     public virtual void DrawFOVCone()
     {
-        // Doesn't really work well for angles > 180..
-        if (m_Fov >= 180.0f)
-            return;
+        newVertices.Clear();
+        newTriangles.Clear();
 
-        int segments =12; 
-        int numVertices = segments + 2;
-        Vector3[] newVertices = new Vector3[numVertices];
-        int[] newTriangles = new int[segments * 3];
+        m_Fov = Mathf.Clamp(m_Fov, 0, 360);
 
+        int segments = m_Fov > 180 ? 48 : 12; 
+     
         Vector3 origin = m_GameObject.transform.position + m_GameObject.transform.forward * 0.5f;
         origin.y = m_GroundLevel;
         //origin
-        newVertices[0] = origin;
+        newVertices.Add(origin);
         float angleInterval = m_Fov / segments;
         float startAngle = -m_Fov * 0.5f;
         int i;
@@ -206,93 +182,34 @@ public abstract class Enemy
             if (Physics.Raycast(ray, out RaycastHit hit, m_ViewDistance, ~LayerMask.GetMask("Guards")))
             {
                 pt = hit.point;
+                m_IsPlayerInFOV |= (hit.transform.gameObject == m_PlayerObject);
             }
             startAngle += angleInterval;
             pt.y = m_GroundLevel;
-            newVertices[i + 1] = pt;
+            newVertices.Add(pt);
         }
+      
         for ( i = 0; i < segments; ++i)
         {
-            newTriangles[i] = 0;
-            newTriangles[(i * 3) + 1] = i+1;
-            newTriangles[(i * 3) + 2] = i+2;
+            newTriangles.Add(0);
+            newTriangles.Add(i+1);
+            newTriangles.Add(i+2);
+        }
+        if (m_Fov == 360)
+        {
+            newVertices.Add(newVertices[0]);
+
+            int last = newTriangles[newTriangles.Count - 1];
+            int second = newTriangles[1];
+            newTriangles.Add(0);
+            newTriangles.Add(last);
+            newTriangles.Add(second);
+
         }
 
-       
         fovMesh.Clear();
-        fovMesh.vertices = newVertices;
-        fovMesh.triangles = newTriangles;
-      
-        //Vector3 foward = m_GameObject.transform.forward;
-        //float rotationAngle = m_Fov / 2.0f;
-
-        //Vector3 euler = m_GameObject.transform.rotation.eulerAngles;
-
-        //Quaternion rotationQuaternion1 = Quaternion.Euler(0.0f, -rotationAngle,0.0f);
-        //Quaternion rotationQuaternion2 = Quaternion.Euler(0.0f, rotationAngle, 0.0f);
-
-        //Vector3 rotatedVector1 = rotationQuaternion1 * foward;
-        //Vector3 rotatedVector2 = rotationQuaternion2 * foward;
-
-        //rotatedVector1.Scale(new Vector3(m_ViewDistance, m_ViewDistance, m_ViewDistance));
-        //rotatedVector2.Scale(new Vector3(m_ViewDistance, m_ViewDistance, m_ViewDistance));
-
-        //Vector3 p0= m_GameObject.transform.position;
-        //Vector3 p1 = m_GameObject.transform.position + rotatedVector1;
-        //Vector3 p2 = m_GameObject.transform.position + rotatedVector2;
-        //Vector3 p3 = m_GameObject.transform.position;
-
-        //Ray r1 = new Ray(m_GameObject.transform.position, rotatedVector1);
-        //if (Physics.Raycast(r1, out RaycastHit hitInfo1))
-        //{
-        //    if (hitInfo1.distance < m_ViewDistance)
-        //    {
-        //        bool IsHitPlayer = (hitInfo1.transform.gameObject == m_PlayerObject);
-        //        m_IsPlayerInFOV |= IsHitPlayer;
-
-        //        bool isValidHit = IsValidFOVHitTarget(hitInfo1.transform.gameObject.layer);
-        //        if (isValidHit) // Weird to clip cone to player I think
-        //        {
-        //            p1 = hitInfo1.point;
-        //        }
-        //    }
-        //}
-        //Ray r2 = new Ray(m_GameObject.transform.position, rotatedVector2);
-        //if (Physics.Raycast(r2, out RaycastHit hitInfo2))
-        //{
-        //    if (hitInfo2.distance < m_ViewDistance)
-        //    {
-        //        bool IsHitPlayer = (hitInfo2.transform.gameObject == m_PlayerObject);
-        //        m_IsPlayerInFOV |= IsHitPlayer;
-
-        //        bool isValidHit = IsValidFOVHitTarget(hitInfo2.transform.gameObject.layer);
-        //        if (isValidHit) // Weird to clip cone to player I think
-        //        {
-        //            p2 = hitInfo2.point;
-        //        }
-        //    }
-        //}
-
-        if (m_IsPlayerInFOV)
-		{
-			if(Physics.Linecast(m_GameObject.transform.position,m_PlayerObject.transform.position,out RaycastHit hf))
-			{
-				if(hf.collider.gameObject != m_PlayerObject)
-				{
-					m_IsPlayerInFOV = false;
-				}
-			}
-		}
-
-        //p0.y = m_GroundLevel;
-        //p1.y = m_GroundLevel;
-        //p2.y = m_GroundLevel;
-        //p3.y = m_GroundLevel;
-
-        //m_LineRenderer.SetPosition(0, p0);
-        //m_LineRenderer.SetPosition(1, p1);
-        //m_LineRenderer.SetPosition(2, p2);
-        //m_LineRenderer.SetPosition(3, p3);
+        fovMesh.vertices = newVertices.ToArray();
+        fovMesh.triangles = newTriangles.ToArray();
     }
 }
 

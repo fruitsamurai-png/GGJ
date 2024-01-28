@@ -274,8 +274,8 @@ public class GuardDistractedState : State
 }
 public class GuardEnemy : Enemy
 {
-	public GuardEnemy(GameObject go, EnemyAlertBar enemyAlertBar, Material fovMaterial)
-		: base(go, enemyAlertBar, fovMaterial)
+	public GuardEnemy(GameObject go, EnemyAlertBar enemyAlertBar, GameObject fovPrebInstance)
+		: base(go, enemyAlertBar, fovPrebInstance)
 	{
 		m_EnemyStateMachine = new StateMachine();
 		m_GameObject = go;
@@ -335,12 +335,13 @@ public class GuardEnemyBehavior : MonoBehaviour
 	public GuardEnemy m_Enemy;
 
 	public EnemyAlertBar alertBar;
+	public GameObject fovPrebInstance;
 
 	public static float speedMult = 1.0f;
-
 	void Start()
 	{
-		m_Enemy = new GuardEnemy(gameObject, alertBar, fovMaterial);
+		GameObject newFovGO = Instantiate(fovPrebInstance,Vector3.zero,Quaternion.identity);
+		m_Enemy = new GuardEnemy(gameObject, alertBar, newFovGO);
 		m_Enemy.Start();
 
 	}

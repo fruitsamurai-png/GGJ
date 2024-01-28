@@ -183,8 +183,9 @@ public class CameraEnemy : Enemy
 {
     public Vector3 m_InitialForward;
 
-    public CameraEnemy(GameObject go, EnemyAlertBar enemyAlertBar, Material fovMaterial) 
-        : base(go, enemyAlertBar, fovMaterial)
+    public CameraEnemy(GameObject go, EnemyAlertBar enemyAlertBar,  GameObject fovGO) 
+        : base(go, enemyAlertBar, fovGO)
+
     {
         m_EnemyStateMachine = new StateMachine();
         m_GameObject = go;
@@ -230,14 +231,15 @@ public class CameraEnemy : Enemy
 
 public class CameraEnemyBehavior : MonoBehaviour
 {
-    public Material fovMaterial;
-
+    //public Material fovMaterial;
+    public GameObject fovPrefab;
     public CameraEnemy m_Enemy;
     public EnemyAlertBar alertBar;
 
     void Start()
     {
-        m_Enemy = new CameraEnemy(gameObject, alertBar, fovMaterial);
+        GameObject go = Instantiate(fovPrefab, Vector3.zero, Quaternion.identity);
+        m_Enemy = new CameraEnemy(gameObject, alertBar, go);
         m_Enemy.Start();
     }
 
@@ -245,24 +247,26 @@ public class CameraEnemyBehavior : MonoBehaviour
     void Update()
     {
         m_Enemy.Update();
+    }
 
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    string[] layerMask = { "Default", "Guards" };
-
-        //    foreach (Collider c in Physics.OverlapSphere(transform.position, 1000.0f, LayerMask.GetMask(layerMask)))
-        //    {
-        //        GameObject o = c.gameObject;
-        //        if (o.TryGetComponent(out CameraEnemyBehavior ceb))
-        //        {
-        //            ceb.m_Enemy.Jailbreak(99, 1.0f);
-        //        }
-        //        if (o.TryGetComponent(out GuardEnemyBehavior geb))
-        //        {
-        //            geb.m_Enemy.Jailbreak(99, 1.0f);
-        //        }
-        //    }
-        //}
+    void OnGUI()
+    {
+        if (GUI.Button(new Rect(10, 10, 150, 50), "Stun everything for 1(s)"))
+        {
+            string[] layerMask = { "Default", "Guards" };
+            foreach (Collider c in Physics.OverlapSphere(transform.position, 1000.0f, LayerMask.GetMask(layerMask)))
+            {
+                GameObject o = c.gameObject;
+                if (o.TryGetComponent(out CameraEnemyBehavior ceb))
+                {
+                    ceb.m_Enemy.Jailbreak(99, 1.0f);
+                }
+                if (o.TryGetComponent(out GuardEnemyBehavior geb))
+                {
+                    geb.m_Enemy.Jailbreak(99, 1.0f);
+                }
+            }
+        }
     }
 
 }
