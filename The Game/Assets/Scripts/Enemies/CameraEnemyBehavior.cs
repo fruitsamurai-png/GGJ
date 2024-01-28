@@ -120,7 +120,7 @@ public class CameraAlertedState : State
         // but has a large radius of notifying nearby guards when alerted.
         float range = 40.0f;
         m_Enemy.AlertGuardsInVicinity(m_Alterer, range);
-        m_Enemy.m_IsAltered = true;
+        m_Enemy.m_IsAlerted = true;
         m_PlayerObject = GameObject.FindWithTag("Player");
     }
 
@@ -142,7 +142,7 @@ public class CameraAlertedState : State
 
     public override void OnExit()
     {
-        m_Enemy.m_IsAltered = false;
+        m_Enemy.m_IsAlerted = false;
     }
 }
 public class CameraDistractedState : State

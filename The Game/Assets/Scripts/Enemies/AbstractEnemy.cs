@@ -33,7 +33,7 @@ public abstract class Enemy
 #if UNITY_EDITOR
     public static bool m_IgnoreAlert = false;
 #endif
-    public bool m_IsAltered = false;
+    public bool m_IsAlerted = false;
     public float m_AlertLevel = 0.0f;
     public float m_AlertGraceElapsedTime = 0.0f;
     public float m_AlertIncreaseStep = 0.001f;
@@ -125,7 +125,7 @@ public abstract class Enemy
         if (m_IsPlayerInFOV && !m_IsStunned)
         {
             IncreaseAlertess();
-            if (m_AlertLevel >= 1.0f && !m_IsAltered)
+            if (m_AlertLevel >= 1.0f && !m_IsAlerted)
             {
                 Alert(m_GameObject);
             }

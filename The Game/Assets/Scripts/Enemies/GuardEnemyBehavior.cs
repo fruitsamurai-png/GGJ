@@ -154,7 +154,7 @@ public class GuardAlertedState : State
 		}
 
 		m_Enemy.m_AlertLevel = 1.0f; // lol
-		m_Enemy.m_IsAltered = true;
+		m_Enemy.m_IsAlerted = true;
 		m_Player = GameObject.FindGameObjectWithTag("Player");
 
 		repathCooldown = 0f;
@@ -182,7 +182,7 @@ public class GuardAlertedState : State
 
 	public override void OnExit()
 	{
-		m_Enemy.m_IsAltered = false;
+		m_Enemy.m_IsAlerted = false;
 	}
 }
 public class GuardDistractedState : State
@@ -303,7 +303,7 @@ public class GuardEnemy : Enemy
 		{
 			enemy = sbeb.m_Enemy;
 		}
-		if (!enemy.m_IsAltered)
+		if (!enemy.m_IsAlerted)
 		{
 			m_EnemyStateMachine.ChangeState(new GuardAlertedState(m_EnemyStateMachine, m_GameObject, alerter, enemy));
 		}
@@ -352,7 +352,7 @@ public class GuardEnemyBehavior : MonoBehaviour
 	void Update()
 	{
 		m_Enemy.Update();
-		if (m_Enemy.m_IsAltered)
+		if (m_Enemy.m_IsAlerted)
 		{
 			//if (childGameObject.TryGetComponent(out TextBubble tex))
 			//{

@@ -96,12 +96,12 @@ public class PlayerMovement : MonoBehaviour
 		}
 		if (closestEnemy.TryGetComponent(out SecurityBotEnemyBehavior sec))
 		{
-			collided = sec.m_Enemy.m_IsAltered;
+			collided = sec.m_Enemy.m_IsAlerted;
 			return;
 		}
 		if (closestEnemy.TryGetComponent(out GuardEnemyBehavior gua))
 		{
-			collided = gua.m_Enemy.m_IsAltered;
+			collided = gua.m_Enemy.m_IsAlerted;
 			return;
 		}
 	}
