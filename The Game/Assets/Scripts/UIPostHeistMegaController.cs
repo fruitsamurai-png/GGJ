@@ -7,19 +7,37 @@ using UnityEngine.SceneManagement;
 
 public class UIPostHeistMegaController : MonoBehaviour
 {
+	public static bool playerWasCaught = false;
+
 	public GameObject stolenArtworkEntryPrefab;
 	public Transform stolenArtworkPanel;
 
+	public GameObject heistCompleteText;
+	public GameObject caughtText;
+
 	public TextMeshProUGUI moneyText;
 	public TextMeshProUGUI aiLevelText;
+	public TextMeshProUGUI livesText;
 
 	public GameObject expBar;
 
 	List<UIPostHeistStolenPaintingEntry> stolenArtworkEntries = new();
 
-	void Start()
+	void Awake()
 	{
+		heistCompleteText.SetActive(!playerWasCaught);
+		caughtText.SetActive(playerWasCaught);
 
+		if (playerWasCaught)
+		{
+			AbilityPassiveManager.lives--;
+			if (AbilityPassiveManager.lives <= 0)
+			{
+				SceneManager.LoadScene("GameOver");
+			}
+
+			playerWasCaught = false;
+		}
 	}
 
 	void Update()
@@ -28,12 +46,14 @@ public class UIPostHeistMegaController : MonoBehaviour
 
 		moneyText.text = $"${(StealingInventory.money):n0}";
 		aiLevelText.text = AbilityPassiveManager.AILevel.ToString();
+		livesText.text = AbilityPassiveManager.lives.ToString();
+
 		expBar.transform.localScale = new Vector3(AbilityPassiveManager.GetExpPercentage(), 1f);
 	}
 
 	public void NextHeist()
 	{
-		SceneManager.LoadScene("MainLevel"); 
+		SceneManager.LoadScene("MainLevel");
 	}
 
 	void UpdateList()

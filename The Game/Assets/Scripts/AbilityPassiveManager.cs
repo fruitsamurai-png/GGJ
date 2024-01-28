@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class AbilityPassiveManager : MonoBehaviour
 {
+	public static int lives = 5;
+
 	public static int AILevel = 1;
 	public static int AIexp = 0;
 	static int AImaxExp = 100;
@@ -30,6 +32,7 @@ public class AbilityPassiveManager : MonoBehaviour
 
 	public static void Reset()
 	{
+		lives = 5;
 		AILevel = 1;
 		AIexp = 0;
 	}

@@ -8,6 +8,7 @@ public class ExtractionZone : MonoBehaviour
 	{
 		if (collision.gameObject.tag == "Player")
 		{
+			UIPostHeistMegaController.playerWasCaught = false;
 			SceneManager.LoadScene("PostHeist");
 		}
 	}

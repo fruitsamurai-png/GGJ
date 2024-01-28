@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
@@ -97,14 +98,23 @@ public class PlayerMovement : MonoBehaviour
 		if (closestEnemy.TryGetComponent(out SecurityBotEnemyBehavior sec))
 		{
 			collided = sec.m_Enemy.isAltered;
+			Caught();
 			return;
 		}
 		if (closestEnemy.TryGetComponent(out GuardEnemyBehavior gua))
 		{
 			collided = gua.m_Enemy.isAltered;
+			Caught();
 			return;
 		}
 	}
+
+	void Caught()
+	{
+		UIPostHeistMegaController.playerWasCaught = true;
+		SceneManager.LoadScene("PostHeist");
+	}
+
 	void InteractNearby(bool activate = true)
 	{
 		float interactRange = 1.5f;
