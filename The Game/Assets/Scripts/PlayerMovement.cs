@@ -165,11 +165,13 @@ public class PlayerMovement : MonoBehaviour
 			return;
 		}
 
-		Vector3 forward = transform.forward;
+		Vector3 forward = closestInteractable.transform.forward;
+		Vector3 relative = gameObject.transform.forward;
+		relative.Normalize();
 
-		float dp = math.dot(forward, closestInteractable.transform.forward);
+		float dp = math.dot(forward, relative);
 
-        if (dp < -0.1f)
+        if (dp < 0.1f)
         {
             return;
         }
