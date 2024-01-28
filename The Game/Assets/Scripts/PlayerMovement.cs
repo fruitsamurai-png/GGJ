@@ -128,6 +128,7 @@ public class PlayerMovement : MonoBehaviour
 	}
     void Caught()
     {
+		StealingInventory.ClearInventory();
         UIPostHeistMegaController.playerWasCaught = true;
         SceneManager.LoadScene("PostHeist");
     }
