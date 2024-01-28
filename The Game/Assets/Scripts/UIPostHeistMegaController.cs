@@ -23,8 +23,22 @@ public class UIPostHeistMegaController : MonoBehaviour
 
 	List<UIPostHeistStolenPaintingEntry> stolenArtworkEntries = new();
 
+	public AudioClip sellSound;
+	public AudioClip trainSound;
+	public AudioClip levelUpSound;
+
+	public AudioClip caughtSound;
+	public AudioClip heistCompleteSound;
+
+	AudioSource audioPlayer;
+
+	int lastLevel = 0;
+	int lastExp = 0;
+	int lastMoeny = 0;
 	void Awake()
 	{
+		audioPlayer = GetComponent<AudioSource>();
+
 		heistCompleteText.SetActive(!playerWasCaught);
 		caughtText.SetActive(playerWasCaught);
 
@@ -37,7 +51,17 @@ public class UIPostHeistMegaController : MonoBehaviour
 			}
 
 			playerWasCaught = false;
+
+			audioPlayer.PlayOneShot(caughtSound, 1f);
 		}
+		else
+		{
+			audioPlayer.PlayOneShot(heistCompleteSound, 1f);
+		}
+
+		lastLevel = AbilityPassiveManager.AILevel;
+		lastExp = AbilityPassiveManager.AIexp;
+		lastMoeny = StealingInventory.money;
 	}
 
 	void Update()
@@ -49,6 +73,22 @@ public class UIPostHeistMegaController : MonoBehaviour
 		livesText.text = AbilityPassiveManager.lives.ToString();
 
 		expBar.transform.localScale = new Vector3(AbilityPassiveManager.GetExpPercentage(), 1f);
+
+		if(StealingInventory.money > lastMoeny)
+		{
+			lastMoeny = StealingInventory.money;
+			audioPlayer.PlayOneShot(sellSound, 1f);
+		}
+		if (AbilityPassiveManager.AIexp != lastExp)
+		{
+			lastExp = AbilityPassiveManager.AIexp;
+			audioPlayer.PlayOneShot(trainSound, 1f);
+		}
+		if (AbilityPassiveManager.AILevel > lastLevel)
+		{
+			lastLevel = AbilityPassiveManager.AILevel;
+			audioPlayer.PlayOneShot(levelUpSound, 1f);
+		}
 	}
 
 	public void NextHeist()

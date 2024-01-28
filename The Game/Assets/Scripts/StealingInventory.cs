@@ -12,7 +12,7 @@ public class StealingInventory
 
 	public static void Reset()
 	{
-		inventory = new();
+		ClearInventory();
 		money = 0;
 	}
 	public static void AddArt(int artwork, int level)
@@ -23,6 +23,12 @@ public class StealingInventory
 	{
 		inventory.Remove(art);
 	}
+
+	public static void ClearInventory()
+	{
+		inventory = new();
+	}
+
 	public static void SellArt(StolenArt art)
 	{
 		money += moneyPerArtLevel * art.level;
