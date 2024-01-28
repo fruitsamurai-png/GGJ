@@ -151,4 +151,41 @@ public class PlayerMovement : MonoBehaviour
 			return;
 		}
 	}
+
+#if UNITY_EDITOR
+    void OnGUI()
+    {
+        if (GUI.Button(new Rect(500, 5, 150, 50), "Stun everything for 1(s)"))
+        {
+            string[] layerMask = { "Default", "Guards" };
+            foreach (Collider c in Physics.OverlapSphere(transform.position, 1000.0f, LayerMask.GetMask(layerMask)))
+            {
+                GameObject o = c.gameObject;
+                if (o.TryGetComponent(out CameraEnemyBehavior ceb))
+                {
+                    ceb.m_Enemy.Jailbreak(99, 1.0f);
+                }
+                if (o.TryGetComponent(out GuardEnemyBehavior geb))
+                {
+                    geb.m_Enemy.Jailbreak(99, 1.0f);
+                }
+            }
+        }
+        string ignoreAlertDebugText = "Alert: ";
+
+        if (Enemy.m_IgnoreAlert)
+        {
+            ignoreAlertDebugText += "off";
+        }
+        else
+        {
+            ignoreAlertDebugText += "on";
+        }
+
+        if (GUI.Button(new Rect(500, 60, 150, 50), ignoreAlertDebugText))
+        {
+            Enemy.m_IgnoreAlert = !Enemy.m_IgnoreAlert;
+        }
+    }
+#endif
 }

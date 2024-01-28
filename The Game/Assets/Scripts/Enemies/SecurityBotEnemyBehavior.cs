@@ -84,6 +84,11 @@ public class SecurityBotEnemyBehavior : MonoBehaviour
     public float m_AlertDecreaseStep = 0.0005f; // decrease half as fast as increase
     public float m_AlertGracePeriod = 2.0f;
 
+    // Speed
+    public float m_PatrolSpeed = 1.0f;
+    public float m_DistractedSpeed = 8.0f;
+    public float m_PursuitSpeed = 12.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -95,6 +100,9 @@ public class SecurityBotEnemyBehavior : MonoBehaviour
         m_Enemy.m_AlertIncreaseStep = m_AlertIncreaseStep;
         m_Enemy.m_AlertDecreaseStep = m_AlertDecreaseStep;
         m_Enemy.m_AlertGracePeriod = m_AlertGracePeriod;
+        m_Enemy.m_PatrolSpeed = m_PatrolSpeed;
+        m_Enemy.m_DistractedSpeed = m_DistractedSpeed;
+        m_Enemy.m_PursuitSpeed = m_PursuitSpeed;
 
         m_Enemy.Start();
         // Get the child Transform
@@ -124,11 +132,4 @@ public class SecurityBotEnemyBehavior : MonoBehaviour
             }
         }
     }
-    //void OnGUI()
-    //{
-    //    GUI.TextArea(new Rect(10, 10, 250, 100), 
-    //        "Alert: " + m_Enemy.m_AlertLevel + 
-    //        "In range: " + m_Enemy.InRange +
-    //        "Hit with ray: " + m_Enemy.RayHit);
-    //}
 }

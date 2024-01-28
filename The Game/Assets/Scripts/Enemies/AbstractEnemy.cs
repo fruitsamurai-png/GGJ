@@ -20,6 +20,11 @@ public abstract class Enemy
 
     public float m_IdleDuration = 0.0f;
 
+    // Speed
+    public float m_PatrolSpeed = 1.0f;
+    public float m_DistractedSpeed = 8.0f;
+    public float m_PursuitSpeed = 12.0f;
+
     // FOV
     public float m_Fov = 60.0f;
     public float m_ViewDistance = 5.0f;
