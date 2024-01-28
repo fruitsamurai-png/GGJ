@@ -99,13 +99,13 @@ public abstract class Enemy
 
             if (o.TryGetComponent(out GuardEnemyBehavior guardEnemyBehavior))
             {
-                guardEnemyBehavior.m_Enemy.Alert(alerter);
+                    guardEnemyBehavior.m_Enemy.Alert(alerter);
             }
 
             // Do we inform other cameras?
             else if (o.TryGetComponent(out CameraEnemyBehavior cameraEnemyBehavior))
             {
-                cameraEnemyBehavior.m_Enemy.Alert(alerter);
+                    cameraEnemyBehavior.m_Enemy.Alert(alerter);
             }
         }
     }

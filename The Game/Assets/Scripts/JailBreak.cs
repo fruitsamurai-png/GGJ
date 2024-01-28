@@ -37,6 +37,8 @@ public class JailBreak : Ability
         {
             return;
         }
+        Debug.Log(closestInteractable.name);
+
         if (closestInteractable.TryGetComponent(out SecurityLock loc))
         {
             MasterManagers mm = MasterManagers.instance;
@@ -46,6 +48,7 @@ public class JailBreak : Ability
         if (closestInteractable.TryGetComponent(out GuardEnemyBehavior behavior))
         {
             MasterManagers mm = MasterManagers.instance;
+
             behavior.m_Enemy.Jailbreak(AbilityPassiveManager.AILevel, enemyStunDur);
             return;
         }
