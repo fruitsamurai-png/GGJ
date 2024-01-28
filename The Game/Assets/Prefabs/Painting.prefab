@@ -800,7 +800,7 @@ Transform:
   m_GameObject: {fileID: 6634677725990203764}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 14.09, y: 2.614, z: -9.7}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7663938444001862763}
@@ -831,10 +831,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d615ce1a8696ef4ba8a8741d2ee9fd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  randomise: 0
+  artwork: 0
   artState: 0
   artLevel: 1
   replicaLevel: 1
-  artwork: 0
   realArtObjects:
   - {fileID: 2435884901492026667}
   - {fileID: 3821145993661406038}

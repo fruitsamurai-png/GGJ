@@ -21,11 +21,11 @@ public class Lights : MonoBehaviour
     public void TurnOnOff(bool state)
     {
         if (!state) {
-            lit.intensity = 0;
+			lit.enabled = false;
         }
         else
         {
-            lit.intensity = 100;
+			lit.enabled = true;
         }
         foreach (Collider c in Physics.OverlapSphere(transform.position, notifyRange, LayerMask.GetMask("Guards")))
         {

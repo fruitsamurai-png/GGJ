@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Artwork : MonoBehaviour
 {
+	public bool randomise = false;
 
+	public int artwork = 0;
 	public enum ArtState { REAL, STOLEN, FAKE };
 
 	public ArtState artState = ArtState.REAL;
 	public int artLevel = 1;
 	public int replicaLevel = 1;
-
-	public int artwork = 0;
 
 	public GameObject[] realArtObjects;
 	public GameObject[] fakeArtObjects;
@@ -19,11 +19,25 @@ public class Artwork : MonoBehaviour
 
 	private void Start()
 	{
+		Setup();
 		UpdateArtwork();
 	}
+
+	void Setup()
+	{
+		if (randomise || artwork == -1)
+		{
+			artwork = Random.Range(0, realArtObjects.Length);
+		}
+		if (randomise || artLevel == -1)
+		{
+			artLevel = Random.Range(1, 6);
+		}
+	}
+
 	private void Update()
 	{
-		
+
 	}
 	public void UpdateArtwork()
 	{
@@ -72,4 +86,17 @@ public class Artwork : MonoBehaviour
 		UpdateArtwork();
 	}
 
+	private void OnDrawGizmos()
+	{
+		if (randomise)
+		{
+			Gizmos.color = Color.magenta;
+			Gizmos.DrawWireSphere(transform.position, 1f);
+		}
+		if (artLevel == -1)
+		{
+			Gizmos.color = Color.blue;
+			Gizmos.DrawWireSphere(transform.position, 1f);
+		}
+	}
 }
