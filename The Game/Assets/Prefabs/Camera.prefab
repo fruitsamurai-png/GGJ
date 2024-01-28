@@ -120,6 +120,7 @@ MonoBehaviour:
   m_AlertIncreaseStep: 0.001
   m_AlertDecreaseStep: 0.0005
   m_AlertGracePeriod: 2
+  m_AlterRadius: 40
   m_AngleSwitchInterval: 5
 --- !u!1001 &6042743956305186511
 PrefabInstance:

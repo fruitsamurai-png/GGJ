@@ -40,6 +40,7 @@ public abstract class Enemy
     public float m_AlertIncreaseStep = 0.001f;
     public float m_AlertDecreaseStep = 0.0005f; // decrease half as fast as increase
     public float m_AlertGracePeriod = 2.0f;
+    public float m_AlterRadius = 10.0f;
     public Material m_MeshMaterial;
     public Color m_OriginalMaterialColor;
     public EnemyAlertBar m_AlertBar;
@@ -128,6 +129,7 @@ public abstract class Enemy
             IncreaseAlertess();
             if (m_AlertLevel >= 1.0f && !m_IsAlerted)
             {
+                AlertGuardsInVicinity(m_GameObject, m_AlterRadius);
                 Alert(m_GameObject);
             }
         }

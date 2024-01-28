@@ -83,6 +83,7 @@ public class SecurityBotEnemyBehavior : MonoBehaviour
     public float m_AlertIncreaseStep = 0.001f;
     public float m_AlertDecreaseStep = 0.0005f; // decrease half as fast as increase
     public float m_AlertGracePeriod = 2.0f;
+    public float m_AlterRadius = 10.0f;
 
     // Speed
     public float m_PatrolSpeed = 1.0f;
@@ -103,6 +104,7 @@ public class SecurityBotEnemyBehavior : MonoBehaviour
         m_Enemy.m_PatrolSpeed = m_PatrolSpeed;
         m_Enemy.m_DistractedSpeed = m_DistractedSpeed;
         m_Enemy.m_PursuitSpeed = m_PursuitSpeed;
+        m_Enemy.m_AlterRadius = m_AlterRadius;
 
         m_Enemy.Start();
         // Get the child Transform

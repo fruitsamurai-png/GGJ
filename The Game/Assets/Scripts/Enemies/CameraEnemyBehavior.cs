@@ -116,10 +116,6 @@ public class CameraAlertedState : State
     }
     public override void OnEnter()
     {
-        // Does not pursue the player when alerted,
-        // but has a large radius of notifying nearby guards when alerted.
-        float range = 40.0f;
-        m_Enemy.AlertGuardsInVicinity(m_Alterer, range);
         m_Enemy.m_IsAlerted = true;
         m_PlayerObject = GameObject.FindWithTag("Player");
     }
@@ -239,6 +235,7 @@ public class CameraEnemyBehavior : MonoBehaviour
     public float m_AlertIncreaseStep = 0.001f;
     public float m_AlertDecreaseStep = 0.0005f; // decrease half as fast as increase
     public float m_AlertGracePeriod = 2.0f;
+    public float m_AlterRadius = 10.0f;
 
     public float m_AngleSwitchInterval = 0.5f;
 
@@ -252,6 +249,7 @@ public class CameraEnemyBehavior : MonoBehaviour
         m_Enemy.m_AlertDecreaseStep = m_AlertDecreaseStep;
         m_Enemy.m_AlertGracePeriod = m_AlertGracePeriod;
         m_Enemy.m_CameraPatrolAngleSwitchInterval = m_AngleSwitchInterval;
+        m_Enemy.m_AlterRadius = m_AlterRadius;
         m_Enemy.Start();
     }
 
