@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Level1.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/Scenes/MainLevel.unity
+    guid: 2c2287a9d04d0234cad455e28782cc7e
+  - enabled: 1
+    path: Assets/Scenes/PostHeist.unity
+    guid: e2f8915827db37a4388e3b8035894a30
   m_configObjects: {}
