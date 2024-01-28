@@ -126,6 +126,7 @@ MonoBehaviour:
   noiseGen: 0.5
   noiseRadius: 5
   model: {fileID: 7281665169093580409}
+  footstepSfx: {fileID: 8300000, guid: 5465fb5bb9bbc6c4bb72b0207376c547, type: 3}
 --- !u!54 &1804331873055711313
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -26,6 +26,33 @@ public class AlertManager : MonoBehaviour
 				break;
 			}
 		}
-
+		//Check every single robot guard to see if they're alerted or noticing player
+		foreach (SecurityBotEnemyBehavior e in FindObjectsOfType<SecurityBotEnemyBehavior>())
+		{
+			if (e.m_Enemy.m_IsAlerted)
+			{
+				alert = true;
+				break;
+			}
+			if (e.m_Enemy.m_IsPlayerInFOV || e.m_Enemy.IsNoticingStolenPainting)
+			{
+				noticing = true;
+				break;
+			}
+		}
+		//Check every single camera to see if they're alerted or noticing player
+		foreach (CameraEnemyBehavior e in FindObjectsOfType<CameraEnemyBehavior>())
+		{
+			if (e.m_Enemy.m_IsAlerted)
+			{
+				alert = true;
+				break;
+			}
+			if (e.m_Enemy.m_IsPlayerInFOV || e.m_Enemy.IsNoticingStolenPainting)
+			{
+				noticing = true;
+				break;
+			}
+		}
 	}
 }

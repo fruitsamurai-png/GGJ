@@ -24,8 +24,11 @@ public class PlayerMovement : MonoBehaviour
 	private bool sprintToggle = false;
 	// Start is called before the first frame update
 
+	AudioSource audioPlayer;
+
 	void Start()
 	{
+		audioPlayer = GetComponent<AudioSource>();
 		cc = GetComponent<CharacterController>();
 	}
 
@@ -54,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
 		float v = Input.GetAxis("Vertical");
 		Vector3 movement = cc.isGrounded ? v * Vector3.forward + h * Vector3.right : Vector3.zero;
 
-		animationString = movement.sqrMagnitude > 0.1f ? (sprintToggle?"run":"walk") : "idle";
+		animationString = movement.sqrMagnitude > 0.1f ? (sprintToggle ? "run" : "walk") : "idle";
 
 		if (sprintToggle && cc.isGrounded)
 		{
@@ -92,7 +95,7 @@ public class PlayerMovement : MonoBehaviour
 	}
 	private void CheckforGuards()
 	{
-		float interactRange = 0.5f;
+		float interactRange = 1f;
 		float closestDistance = 10000f;
 		GameObject closestEnemy = null;
 
@@ -116,23 +119,23 @@ public class PlayerMovement : MonoBehaviour
 		if (closestEnemy.TryGetComponent(out SecurityBotEnemyBehavior sec))
 		{
 			collided = sec.m_Enemy.m_IsAlerted;
-            Caught();
-            return;
+			Caught();
+			return;
 		}
 		if (closestEnemy.TryGetComponent(out GuardEnemyBehavior gua))
 		{
 			collided = gua.m_Enemy.m_IsAlerted;
-            Caught();
-            return;
+			Caught();
+			return;
 		}
 	}
-    void Caught()
-    {
+	void Caught()
+	{
 		StealingInventory.ClearInventory();
-        UIPostHeistMegaController.playerWasCaught = true;
-        SceneManager.LoadScene("PostHeist");
-    }
-    void InteractNearby(bool activate = true)
+		UIPostHeistMegaController.playerWasCaught = true;
+		SceneManager.LoadScene("PostHeist");
+	}
+	void InteractNearby(bool activate = true)
 	{
 		float interactRange = 1.5f;
 		float closestDistance = 10000f;
@@ -180,39 +183,39 @@ public class PlayerMovement : MonoBehaviour
 	}
 
 #if UNITY_EDITOR
-    void OnGUI()
-    {
-        if (GUI.Button(new Rect(500, 5, 150, 50), "Stun everything for 1(s)"))
-        {
-            string[] layerMask = { "Default", "Guards" };
-            foreach (Collider c in Physics.OverlapSphere(transform.position, 1000.0f, LayerMask.GetMask(layerMask)))
-            {
-                GameObject o = c.gameObject;
-                if (o.TryGetComponent(out CameraEnemyBehavior ceb))
-                {
-                    ceb.m_Enemy.Jailbreak(99, 1.0f);
-                }
-                if (o.TryGetComponent(out GuardEnemyBehavior geb))
-                {
-                    geb.m_Enemy.Jailbreak(99, 1.0f);
-                }
-            }
-        }
-        string ignoreAlertDebugText = "Alert: ";
+	void OnGUI()
+	{
+		if (GUI.Button(new Rect(500, 5, 150, 50), "Stun everything for 1(s)"))
+		{
+			string[] layerMask = { "Default", "Guards" };
+			foreach (Collider c in Physics.OverlapSphere(transform.position, 1000.0f, LayerMask.GetMask(layerMask)))
+			{
+				GameObject o = c.gameObject;
+				if (o.TryGetComponent(out CameraEnemyBehavior ceb))
+				{
+					ceb.m_Enemy.Jailbreak(99, 1.0f);
+				}
+				if (o.TryGetComponent(out GuardEnemyBehavior geb))
+				{
+					geb.m_Enemy.Jailbreak(99, 1.0f);
+				}
+			}
+		}
+		string ignoreAlertDebugText = "Alert: ";
 
-        if (Enemy.m_IgnoreAlert)
-        {
-            ignoreAlertDebugText += "off";
-        }
-        else
-        {
-            ignoreAlertDebugText += "on";
-        }
+		if (Enemy.m_IgnoreAlert)
+		{
+			ignoreAlertDebugText += "off";
+		}
+		else
+		{
+			ignoreAlertDebugText += "on";
+		}
 
-        if (GUI.Button(new Rect(500, 60, 150, 50), ignoreAlertDebugText))
-        {
-            Enemy.m_IgnoreAlert = !Enemy.m_IgnoreAlert;
-        }
-    }
+		if (GUI.Button(new Rect(500, 60, 150, 50), ignoreAlertDebugText))
+		{
+			Enemy.m_IgnoreAlert = !Enemy.m_IgnoreAlert;
+		}
+	}
 #endif
 }

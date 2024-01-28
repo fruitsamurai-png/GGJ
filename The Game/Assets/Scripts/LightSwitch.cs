@@ -6,6 +6,8 @@ public class LightSwitch : MonoBehaviour
 {
     public GameObject[] lightarray;
     private bool trigger=false;
+
+	public AudioClip onSfx;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,5 +28,7 @@ public class LightSwitch : MonoBehaviour
             light.GetComponent<Lights>().TurnOnOff(trigger);
         }
         trigger = !trigger;
+
+		GetComponent<AudioSource>().PlayOneShot(onSfx);
     }
 }

@@ -89,6 +89,16 @@ public class UIPostHeistMegaController : MonoBehaviour
 			lastLevel = AbilityPassiveManager.AILevel;
 			audioPlayer.PlayOneShot(levelUpSound, 1f);
 		}
+
+		if(AbilityPassiveManager.AILevel >= 5 || StealingInventory.money >= 1000000)
+		{
+			SceneManager.LoadScene("WinScreen");
+		}
+
+		if (Input.GetKeyDown(KeyCode.F10))
+		{
+			StealingInventory.money = 999999;
+		}
 	}
 
 	public void NextHeist()
