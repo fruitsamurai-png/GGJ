@@ -43,6 +43,11 @@ public class TrashBin : MonoBehaviour
 			{
 				gb.NotifyDistraction(gameObject);
 			}
+
+			if(o.TryGetComponent(out SecurityBotEnemyBehavior sbeb))
+			{
+                sbeb.m_Enemy.NotifyDistraction(gameObject);
+			}
 		}
 
 	}
