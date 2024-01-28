@@ -15,7 +15,8 @@ public abstract class Enemy
 
     public GameObject m_PlayerObject;
     public bool m_IsPlayerInFOV = false;
-    public float m_GroundLevel = 1.0f;
+	public bool IsNoticingStolenPainting = false;
+	public float m_GroundLevel = 1.0f;
 
     // FOV
     public float m_Fov = 60.0f;

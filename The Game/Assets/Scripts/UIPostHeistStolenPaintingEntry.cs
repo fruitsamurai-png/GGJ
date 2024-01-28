@@ -9,8 +9,7 @@ public class UIPostHeistStolenPaintingEntry : MonoBehaviour
 	public UIArtworkDisplay display;
 	void Start()
 	{
-		display.artwork = art.artwork;
-		priceText.text = $"${(StealingInventory.moneyPerArtLevel * art.level):n0}";
+		UpdateArt();
 	}
 
 	public void SellButton()
@@ -20,5 +19,12 @@ public class UIPostHeistStolenPaintingEntry : MonoBehaviour
 	public void TrainButton()
 	{
 		StealingInventory.TrainArt(art);
+	}
+
+	public void UpdateArt()
+	{
+		display.artwork = art.artwork;
+		priceText.text = $"${(StealingInventory.moneyPerArtLevel * art.level):n0}";
+		display.UpdateArtwork();
 	}
 }

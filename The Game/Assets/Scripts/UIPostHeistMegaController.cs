@@ -74,6 +74,12 @@ public class UIPostHeistMegaController : MonoBehaviour
 				continue;
 			}
 			stolenArtworkEntries[i].art = StealingInventory.inventory[i];
+			stolenArtworkEntries[i].UpdateArt();
+		}
+		for (int i = 0; i < stolenArtworkEntries.Count; i++)
+		{
+			stolenArtworkEntries[i].art = StealingInventory.inventory[i];
+			stolenArtworkEntries[i].UpdateArt();
 		}
 	}
 }

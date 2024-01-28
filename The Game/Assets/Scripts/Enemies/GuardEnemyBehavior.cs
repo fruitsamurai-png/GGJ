@@ -124,6 +124,7 @@ public class GuardPatrollingState : State
 					Debug.DrawLine(m_Enemy.m_GameObject.transform.position, c.gameObject.transform.position, Color.red);
 					if (artwork.artState == Artwork.ArtState.STOLEN || artwork.replicaLevel < artwork.artLevel)
 					{
+						m_Enemy.IsNoticingStolenPainting = true;
 						m_Enemy.IncreaseAlertess();
 					}
 				}
@@ -287,6 +288,7 @@ public class GuardEnemy : Enemy
 
 	public override void Update()
 	{
+		IsNoticingStolenPainting = false;
 		m_IsPlayerInFOV = false;
 		DrawFOVCone();
 

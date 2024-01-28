@@ -235,7 +235,7 @@ MonoBehaviour:
   fovPrebInstance: {fileID: 648726471481843085, guid: bd657f7bb5fd0ac46a7e5959e5561957,
     type: 3}
   m_Fov: 40
-  m_ViewDistance: 10
+  m_ViewDistance: 20
   m_AlertIncreaseStep: 0.001
   m_AlertDecreaseStep: 0.0005
   m_AlertGracePeriod: 2

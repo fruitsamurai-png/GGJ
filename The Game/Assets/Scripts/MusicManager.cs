@@ -11,25 +11,7 @@ public class MusicManager : MonoBehaviour
 
 	void Update()
 	{
-		bool chase = false;
-		bool noticing = false;
-
-		//Check every single guard to see if they're alerted or noticing player
-		foreach (GuardEnemyBehavior e in FindObjectsOfType<GuardEnemyBehavior>())
-		{
-			if (e.m_Enemy.isAltered)
-			{
-				chase = true;
-				break;
-			}
-			if (e.m_Enemy.m_IsPlayerInFOV)
-			{
-				noticing = true;
-				break;
-			}
-		}
-
-		if (chase)
+		if (AlertManager.alert)
 		{
 			sneakyMusic.SetActive(false);
 			chaseMusic.SetActive(true);
@@ -41,7 +23,7 @@ public class MusicManager : MonoBehaviour
 			sneakyMusic.SetActive(true);
 			chaseMusic.SetActive(false);
 			alertSFX.SetActive(false);
-			noticingSFX.SetActive(noticing);
+			noticingSFX.SetActive(AlertManager.noticing);
 		}
 	}
 }
