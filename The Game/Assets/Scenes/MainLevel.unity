@@ -108,7 +108,7 @@ NavMeshSettings:
     agentTypeID: 0
     agentRadius: 1
     agentHeight: 2
-    agentSlope: 32.7
+    agentSlope: 45
     agentClimb: 0.4
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
@@ -1799,7 +1799,7 @@ PrefabInstance:
     - target: {fileID: 5753196659564100874, guid: a924f923629007f408664617819329f1,
         type: 3}
       propertyPath: m_VersionIndex
-      value: 1013
+      value: 1019
       objectReference: {fileID: 0}
     - target: {fileID: 6634677725990203764, guid: a924f923629007f408664617819329f1,
         type: 3}
@@ -2303,7 +2303,7 @@ PrefabInstance:
     - target: {fileID: 5753196659564100874, guid: a924f923629007f408664617819329f1,
         type: 3}
       propertyPath: m_VersionIndex
-      value: 1016
+      value: 1022
       objectReference: {fileID: 0}
     - target: {fileID: 6634677725990203764, guid: a924f923629007f408664617819329f1,
         type: 3}
@@ -3735,7 +3735,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-200296
+  m_Name: pb_Mesh-5860
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3958,7 +3958,7 @@ PrefabInstance:
     - target: {fileID: 5753196659564100874, guid: a924f923629007f408664617819329f1,
         type: 3}
       propertyPath: m_VersionIndex
-      value: 1004
+      value: 1010
       objectReference: {fileID: 0}
     - target: {fileID: 6634677725990203764, guid: a924f923629007f408664617819329f1,
         type: 3}
@@ -4698,7 +4698,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-197766
+  m_Name: pb_Mesh-3326
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -6072,7 +6072,7 @@ PrefabInstance:
     - target: {fileID: 5753196659564100874, guid: a924f923629007f408664617819329f1,
         type: 3}
       propertyPath: m_VersionIndex
-      value: 1010
+      value: 1016
       objectReference: {fileID: 0}
     - target: {fileID: 6634677725990203764, guid: a924f923629007f408664617819329f1,
         type: 3}
@@ -7392,7 +7392,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-202208
+  m_Name: pb_Mesh-7774
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -7667,7 +7667,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-198498
+  m_Name: pb_Mesh-4060
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
