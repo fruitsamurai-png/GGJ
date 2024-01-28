@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -162,16 +165,20 @@ public class PlayerMovement : MonoBehaviour
 			return;
 		}
 
-		//Vector3 forward = transform.forward;
-		//forward.Normalize();
-  //      Quaternion rotatedForward = Quaternion.Euler(0f, 180.0f, 0f);
+		Vector3 forward = transform.forward;
 
-		//if (forward != closestInteractable.transform.forward)
-		//{
-		//	return;
-		//}
+		float dp = math.dot(forward, closestInteractable.transform.forward);
+		float episolon = 0.00001f;
 
-		UIInteractPrompt.ShowInteractable(closestInteractable);
+		if (Math.Abs(dp) < episolon)
+		{
+            if (dp < 0.0f)
+            {
+                return;
+            }
+        }
+
+        UIInteractPrompt.ShowInteractable(closestInteractable);
 
 		if (!activate)
 			return;
