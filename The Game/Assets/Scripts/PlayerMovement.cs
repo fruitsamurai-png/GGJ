@@ -162,6 +162,15 @@ public class PlayerMovement : MonoBehaviour
 			return;
 		}
 
+		Vector3 forward = transform.forward;
+		forward.Normalize();
+        Quaternion rotatedForward = Quaternion.Euler(0f, 180.0f, 0f);
+
+		if (forward != closestInteractable.transform.forward)
+		{
+			return;
+		}
+
 		UIInteractPrompt.ShowInteractable(closestInteractable);
 
 		if (!activate)
