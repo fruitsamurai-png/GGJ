@@ -79,7 +79,10 @@ public class PlayerMovement : MonoBehaviour
 		{
 			InteractNearby(false);
 		}
-
+		if(Input.GetKeyDown(KeyCode.Escape))
+		{
+			Application.Quit();
+		}
 		if (animationString == "idle")
 		{
 			model.Play("Idle");

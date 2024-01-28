@@ -117,8 +117,8 @@ MonoBehaviour:
   alertBar: {fileID: 1328515759028300783}
   m_Fov: 40
   m_ViewDistance: 5
-  m_AlertIncreaseStep: 0.001
-  m_AlertDecreaseStep: 0.0005
+  m_AlertIncreaseStep: 0.009
+  m_AlertDecreaseStep: 0.001
   m_AlertGracePeriod: 2
   m_AlterRadius: 40
   m_AngleSwitchInterval: 5
