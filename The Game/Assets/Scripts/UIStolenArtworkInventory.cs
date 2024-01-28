@@ -2,12 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StolenArtworkInventoryUI : MonoBehaviour
+public class UIStolenArtworkInventory : MonoBehaviour
 {
 	public GameObject artworkDisplayPrefab;
 
 	List<UIArtworkDisplay> displays = new();
-
 	void Update()
 	{
 		UpdateInventory();
@@ -26,8 +25,8 @@ public class StolenArtworkInventoryUI : MonoBehaviour
 		{
 			if (i >= StealingInventory.inventory.Count)
 			{
-				displays.RemoveAt(i);
 				Destroy(displays[i].gameObject);
+				displays.RemoveAt(i);
 				i--;
 				continue;
 			}

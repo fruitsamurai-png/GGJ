@@ -121,7 +121,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 552636104}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1946971581711152553}
+        m_TargetAssemblyTypeName: UIPostHeistStolenPaintingEntry, Assembly-CSharp
+        m_MethodName: TrainButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1067744772
 GameObject:
   m_ObjectHideFlags: 0
@@ -513,7 +525,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1601226808}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1946971581711152553}
+        m_TargetAssemblyTypeName: UIPostHeistStolenPaintingEntry, Assembly-CSharp
+        m_MethodName: SellButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5721751738942219532
 GameObject:
   m_ObjectHideFlags: 0
@@ -599,6 +623,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8148025188039179865}
+  - component: {fileID: 1946971581711152553}
   m_Layer: 5
   m_Name: StolenPainting_PostHeist
   m_TagString: Untagged
@@ -631,6 +656,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1946971581711152553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8148025188039179870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08ce5940c2bec2b45bbd8dc698517ee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  priceText: {fileID: 26258121340160286}
+  display: {fileID: 224113531403588670}
 --- !u!1 &8753036732846967124
 GameObject:
   m_ObjectHideFlags: 0
@@ -920,6 +959,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54a71f61cf960b347821e55460adeb70, type: 3}
+--- !u!114 &224113531403588670 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8218981001732306227, guid: 54a71f61cf960b347821e55460adeb70,
+    type: 3}
+  m_PrefabInstance: {fileID: 8148025188061765901}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62acfd57b82862a4cab321b84adc8e85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &3372213309434122498 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6908270720253505551, guid: 54a71f61cf960b347821e55460adeb70,
