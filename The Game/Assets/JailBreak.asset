@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: JailBreak
   m_EditorClassIdentifier: 
   abilityName: JailBreak
-  cd: 3
+  cd: 5
   activeDur: 0
-  queryRadius: 2
+  queryRadius: 5
   enemyStunDur: 1.5
-  playerLayer: 3

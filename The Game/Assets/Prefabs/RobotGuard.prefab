@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1586621234878737749}
   - component: {fileID: -7762267848256022491}
   - component: {fileID: 5517532578070176758}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RobotGuard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -146,6 +146,9 @@ MonoBehaviour:
   m_AlertIncreaseStep: 0.001
   m_AlertDecreaseStep: 0.0005
   m_AlertGracePeriod: 2
+  m_PatrolSpeed: 1
+  m_DistractedSpeed: 8
+  m_PursuitSpeed: 12
 --- !u!1001 &3643928542135184191
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -153,6 +156,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1586621234878737746}
     m_Modifications:
+    - target: {fileID: 420121496966155987, guid: 8bc66ea5166d0aa4ea9fe20a16800d6c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 4948080202672742857, guid: 8bc66ea5166d0aa4ea9fe20a16800d6c,
         type: 3}
       propertyPath: m_RootOrder
@@ -240,6 +248,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1586621234878737746}
     m_Modifications:
+    - target: {fileID: -8918005507909740353, guid: 6f12ef220e7a7064d969250888254534,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6f12ef220e7a7064d969250888254534,
         type: 3}
       propertyPath: m_RootOrder
@@ -295,26 +308,71 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8199005351108037487, guid: 6f12ef220e7a7064d969250888254534,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -7349441041448915251, guid: 6f12ef220e7a7064d969250888254534,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: -4396642182433536433, guid: 6f12ef220e7a7064d969250888254534,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 1f76ebf31da370a4bac5ad21ae22f396, type: 2}
+    - target: {fileID: -575273881426440590, guid: 6f12ef220e7a7064d969250888254534,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -259972160606440404, guid: 6f12ef220e7a7064d969250888254534,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 635547659545568360, guid: 6f12ef220e7a7064d969250888254534,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6f12ef220e7a7064d969250888254534,
         type: 3}
       propertyPath: m_Name
       value: RobotGuard
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6f12ef220e7a7064d969250888254534,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1630794972795428178, guid: 6f12ef220e7a7064d969250888254534,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 969053394d09b6a46ad2fce989a85baf, type: 2}
+    - target: {fileID: 1750927580854827597, guid: 6f12ef220e7a7064d969250888254534,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1972311069760842964, guid: 6f12ef220e7a7064d969250888254534,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 2582463165944469561, guid: 6f12ef220e7a7064d969250888254534,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 278522d9e07debe429074a00e822504e, type: 2}
+    - target: {fileID: 3082487069764206362, guid: 6f12ef220e7a7064d969250888254534,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f12ef220e7a7064d969250888254534, type: 3}
 --- !u!4 &6118062445833755752 stripped
@@ -330,10 +388,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1586621234878737746}
     m_Modifications:
+    - target: {fileID: 866508883371013741, guid: 20104fc1291cda645a7bbc3d111bc77b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 1996390635155647368, guid: 20104fc1291cda645a7bbc3d111bc77b,
         type: 3}
       propertyPath: m_Name
       value: TextBubble
+      objectReference: {fileID: 0}
+    - target: {fileID: 1996390635155647368, guid: 20104fc1291cda645a7bbc3d111bc77b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3852535685531603926, guid: 20104fc1291cda645a7bbc3d111bc77b,
         type: 3}
@@ -344,6 +412,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_VersionIndex
       value: 1485
+      objectReference: {fileID: 0}
+    - target: {fileID: 5497150387309463154, guid: 20104fc1291cda645a7bbc3d111bc77b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6919708026672577899, guid: 20104fc1291cda645a7bbc3d111bc77b,
         type: 3}

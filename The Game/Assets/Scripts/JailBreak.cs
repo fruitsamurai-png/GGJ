@@ -9,8 +9,7 @@ public class JailBreak : Ability
     float queryRadius = 1.5f;
     [SerializeField]
     float enemyStunDur = 1.5f;
-    [SerializeField]
-    int playerLayer = 3;
+  
     private bool canunlock = false;
 
     public float QueryRadius  { get => queryRadius; }
