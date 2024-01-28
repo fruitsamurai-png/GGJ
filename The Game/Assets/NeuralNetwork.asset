@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityName: NeuralNetwork
   cd: 5
-  activeDur: 2
+  activeDur: 3
   slowMult: 0.4
