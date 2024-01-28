@@ -43,9 +43,7 @@ public class PlayerMovement : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.LeftShift))
-			sprintToggle = !sprintToggle;
-
+		sprintToggle = Input.GetKey(KeyCode.LeftShift);
 
 		float spd = sprintToggle ? sprintSpd : moveSpd;
 		float h = Input.GetAxis("Horizontal");
@@ -66,7 +64,11 @@ public class PlayerMovement : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
-			InteractNearby();
+			InteractNearby(true);
+		}
+		else
+		{
+			InteractNearby(false);
 		}
 	}
 	private void CheckforGuards()
@@ -103,7 +105,7 @@ public class PlayerMovement : MonoBehaviour
 			return;
 		}
 	}
-	void InteractNearby()
+	void InteractNearby(bool activate = true)
 	{
 		float interactRange = 1.5f;
 		float closestDistance = 10000f;
@@ -126,6 +128,11 @@ public class PlayerMovement : MonoBehaviour
 		{
 			return;
 		}
+
+		UIInteractPrompt.ShowInteractable(closestInteractable);
+
+		if (!activate)
+			return;
 
 		//Actually interact
 		if (closestInteractable.TryGetComponent(out TrashBin trashbin))
