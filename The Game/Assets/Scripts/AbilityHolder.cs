@@ -14,6 +14,11 @@ public class AbilityHolder : MonoBehaviour
     enum AbilityState { Ready, Active, Cooldown }
     AbilityState state = AbilityState.Ready;
 
+    public string GetAbilityName() { return ability.abilityName; }
+    public float GetCurrentCd() { return cd; }
+    public float GetOverallCd() { return ability.cd; }
+
+
 
     // Update is called once per frame
     void Update()

@@ -13,12 +13,14 @@ public class GuardIdleState : State
 	private float m_IdleDuration = 2.0f;
 	private float m_IdleTime = 0.0f;
 
-    public GuardIdleState(StateMachine sm, GameObject go, float duration)
+	Enemy m_enemy;
+
+	public GuardIdleState(StateMachine sm, GameObject go, float duration)
 	{
 		m_Sm = sm;
 		m_Go = go;
 		m_IdleDuration = duration;
-    }
+	}
 
 	public override void OnEnter()
 	{
@@ -54,31 +56,41 @@ public class GuardPatrollingState : State
 		m_Sm = sm;
 		agent = go.GetComponent<NavMeshAgent>();
 
-        if (m_Go.TryGetComponent(out GuardEnemyBehavior geb))
+		if (m_Go.TryGetComponent(out GuardEnemyBehavior geb))
 		{
 			m_Enemy = geb.m_Enemy;
 			m_Interactables = geb.m_Enemy.m_Interactables;
-        }
+		}
 		else if (m_Go.TryGetComponent(out SecurityBotEnemyBehavior sbeb))
 		{
 			m_Enemy = sbeb.m_Enemy;
-            m_Interactables = sbeb.m_Enemy.m_Interactables;
-        }
+			m_Interactables = sbeb.m_Enemy.m_Interactables;
+		}
 	}
 
 	private Vector3 GetRandomInteractablePosition()
 	{
-        return m_Interactables[UnityEngine.Random.Range(0, m_Interactables.Count - 1)];
-    }
+		return m_Interactables[UnityEngine.Random.Range(0, m_Interactables.Count - 1)];
+	}
 
 	public override void OnEnter()
-    {
-        agent.speed = m_Enemy.m_PatrolSpeed * GuardEnemyBehavior.speedMult;
+	{
+		agent.speed = m_Enemy.m_PatrolSpeed * GuardEnemyBehavior.speedMult;
 		agent.SetDestination(GetRandomInteractablePosition());
 	}
 
 	public override void OnUpdate()
 	{
+
+		if (agent.remainingDistance > 0.1f)
+		{
+			m_Enemy.m_animationString = "walk";
+		}
+		else
+		{
+			m_Enemy.m_animationString = "idle";
+		}
+
 		agent.speed = m_Enemy.m_PatrolSpeed * GuardEnemyBehavior.speedMult;
 
 		if (m_Enemy.m_AlertLevel >= 1.0f)
@@ -162,6 +174,8 @@ public class GuardAlertedState : State
 
 	public override void OnUpdate()
 	{
+		m_Enemy.m_animationString = "run";
+
 		agent.speed = m_Enemy.m_PursuitSpeed * GuardEnemyBehavior.speedMult;
 		repathCooldown -= Time.deltaTime;
 		if (repathCooldown <= 0f)
@@ -199,16 +213,16 @@ public class GuardDistractedState : State
 		agent = go.GetComponent<NavMeshAgent>();
 		m_Alterer = alterer;
 
-        if (m_Go.TryGetComponent(out GuardEnemyBehavior geb))
-        {
-            m_Enemy = geb.m_Enemy;
-        }
+		if (m_Go.TryGetComponent(out GuardEnemyBehavior geb))
+		{
+			m_Enemy = geb.m_Enemy;
+		}
 
-        if (m_Go.TryGetComponent(out SecurityBotEnemyBehavior sbeb))
-        {
-            m_Enemy = sbeb.m_Enemy;
-        }
-    }
+		if (m_Go.TryGetComponent(out SecurityBotEnemyBehavior sbeb))
+		{
+			m_Enemy = sbeb.m_Enemy;
+		}
+	}
 	public override void OnEnter()
 	{
 		if (m_Alterer != null)
@@ -221,6 +235,15 @@ public class GuardDistractedState : State
 	public override void OnUpdate()
 	{
 		agent.speed = m_Enemy.m_DistractedSpeed * GuardEnemyBehavior.speedMult;
+
+		if (agent.remainingDistance > 1f)
+		{
+			m_Enemy.m_animationString = "run";
+		}
+		else
+		{
+			m_Enemy.m_animationString = "idle";
+		}
 
 		if (distractedTime <= 0f)
 		{
@@ -255,13 +278,13 @@ public class GuardEnemy : Enemy
 		m_GameObject = go;
 		m_Interactables = new List<Vector3>();
 
-        foreach (GameObject interactable in GameObject.FindGameObjectsWithTag("Interactable"))
-        {
-            m_Interactables.Add(interactable.transform.position);
-        }
-    }
+		foreach (GameObject interactable in GameObject.FindGameObjectsWithTag("Interactable"))
+		{
+			m_Interactables.Add(interactable.transform.position);
+		}
+	}
 	public override void Start()
-    {
+	{
 		m_EnemyStateMachine.ChangeState(new GuardPatrollingState(m_EnemyStateMachine, m_GameObject));
 	}
 
@@ -312,6 +335,8 @@ public class GuardEnemy : Enemy
 
 public class GuardEnemyBehavior : MonoBehaviour
 {
+	public Animator model;
+
 	public GuardEnemy m_Enemy;
 
 	public EnemyAlertBar alertBar;
@@ -319,33 +344,33 @@ public class GuardEnemyBehavior : MonoBehaviour
 
 	public static float speedMult = 1.0f;
 
-    public float m_Fov = 40.0f;
-    public float m_ViewDistance = 5.0f;
-    public float m_AlertIncreaseStep = 0.001f;
-    public float m_AlertDecreaseStep = 0.0005f; // decrease half as fast as increase
-    public float m_AlertGracePeriod = 2.0f;
+	public float m_Fov = 40.0f;
+	public float m_ViewDistance = 5.0f;
+	public float m_AlertIncreaseStep = 0.001f;
+	public float m_AlertDecreaseStep = 0.0005f; // decrease half as fast as increase
+	public float m_AlertGracePeriod = 2.0f;
 
 	public float m_IdleDuration = 2.0f;
 
-    // Speed
-    public float m_PatrolSpeed = 1.0f;
-    public float m_DistractedSpeed = 8.0f;
-    public float m_PursuitSpeed = 12.0f;
+	// Speed
+	public float m_PatrolSpeed = 1.0f;
+	public float m_DistractedSpeed = 8.0f;
+	public float m_PursuitSpeed = 12.0f;
 
-    void Start()
+	void Start()
 	{
-		GameObject newFovGO = Instantiate(fovPrebInstance,Vector3.zero,Quaternion.identity);
+		GameObject newFovGO = Instantiate(fovPrebInstance, Vector3.zero, Quaternion.identity);
 		m_Enemy = new GuardEnemy(gameObject, alertBar, newFovGO);
-        m_Enemy.m_Fov = m_Fov;
-        m_Enemy.m_ViewDistance = m_ViewDistance;
-        m_Enemy.m_AlertIncreaseStep = m_AlertIncreaseStep;
-        m_Enemy.m_AlertDecreaseStep = m_AlertDecreaseStep;
-        m_Enemy.m_AlertGracePeriod = m_AlertGracePeriod;
-        m_Enemy.m_IdleDuration = m_IdleDuration;
-        m_Enemy.m_PatrolSpeed = m_PatrolSpeed;
-        m_Enemy.m_DistractedSpeed = m_DistractedSpeed;
-        m_Enemy.m_PursuitSpeed = m_PursuitSpeed;
-    m_Enemy.Start();
+		m_Enemy.m_Fov = m_Fov;
+		m_Enemy.m_ViewDistance = m_ViewDistance;
+		m_Enemy.m_AlertIncreaseStep = m_AlertIncreaseStep;
+		m_Enemy.m_AlertDecreaseStep = m_AlertDecreaseStep;
+		m_Enemy.m_AlertGracePeriod = m_AlertGracePeriod;
+		m_Enemy.m_IdleDuration = m_IdleDuration;
+		m_Enemy.m_PatrolSpeed = m_PatrolSpeed;
+		m_Enemy.m_DistractedSpeed = m_DistractedSpeed;
+		m_Enemy.m_PursuitSpeed = m_PursuitSpeed;
+		m_Enemy.Start();
 	}
 
 	// Update is called once per frame
@@ -365,6 +390,19 @@ public class GuardEnemyBehavior : MonoBehaviour
 			//{
 			//	tex.TriggerTextSwitch(false);
 			//}
+		}
+
+		if(m_Enemy.m_animationString == "idle")
+		{
+			model.Play("Idle");
+		}
+		else if (m_Enemy.m_animationString == "walk")
+		{
+			model.Play("Walk");
+		}
+		else if (m_Enemy.m_animationString == "run")
+		{
+			model.Play("Run");
 		}
 	}
 

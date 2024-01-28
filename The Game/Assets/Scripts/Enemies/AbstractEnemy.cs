@@ -12,6 +12,7 @@ public abstract class Enemy
     public StateMachine m_EnemyStateMachine;
     public GameObject m_GameObject;
 
+	public string m_animationString = "idle";
 
     public GameObject m_PlayerObject;
     public bool m_IsPlayerInFOV = false;
