@@ -162,7 +162,7 @@ public class GuardAlertedState : State
 
 	public override void OnUpdate()
 	{
-		agent.speed = 4.0f * GuardEnemyBehavior.speedMult;
+		agent.speed = 12.0f * GuardEnemyBehavior.speedMult;
 		repathCooldown -= Time.deltaTime;
 		if (repathCooldown <= 0f)
 		{
