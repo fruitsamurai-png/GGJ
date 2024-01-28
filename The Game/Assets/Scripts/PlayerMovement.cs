@@ -165,7 +165,7 @@ public class PlayerMovement : MonoBehaviour
 			return;
 		}
 
-        Ray ray = new Ray(gameObject.transform.position, gameObject.transform.forward);
+        Ray ray = new Ray(gameObject.transform.position, closestInteractable.transform.position - gameObject.transform.position);
 
 		if (Physics.Raycast(ray, out RaycastHit hitInfo, interactRange))
 		{
@@ -173,6 +173,10 @@ public class PlayerMovement : MonoBehaviour
 			{
 				return;
 			}
+		}
+		else
+		{
+			return;
 		}
 
         UIInteractPrompt.ShowInteractable(closestInteractable);
