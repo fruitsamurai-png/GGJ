@@ -17,7 +17,7 @@ public class MusicManager : MonoBehaviour
 		//Check every single guard to see if they're alerted or noticing player
 		foreach (GuardEnemyBehavior e in FindObjectsOfType<GuardEnemyBehavior>())
 		{
-			if (e.m_Enemy.isAltered)
+			if (e.m_Enemy.m_IsAltered)
 			{
 				chase = true;
 				break;
