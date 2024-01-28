@@ -17,6 +17,9 @@ public class PlayerMovement : MonoBehaviour
 	private float noiseRadius = 5.0f; // noise detection radius
 	bool collided = false;
 
+	public Animator model;
+	string animationString = "idle";
+
 	private CharacterController cc;
 	private bool sprintToggle = false;
 	// Start is called before the first frame update
@@ -51,6 +54,8 @@ public class PlayerMovement : MonoBehaviour
 		float v = Input.GetAxis("Vertical");
 		Vector3 movement = cc.isGrounded ? v * Vector3.forward + h * Vector3.right : Vector3.zero;
 
+		animationString = movement.sqrMagnitude > 0.1f ? (sprintToggle?"run":"walk") : "idle";
+
 		if (sprintToggle && cc.isGrounded)
 		{
 			UpdateNoiseForGuards();
@@ -70,6 +75,19 @@ public class PlayerMovement : MonoBehaviour
 		else
 		{
 			InteractNearby(false);
+		}
+
+		if (animationString == "idle")
+		{
+			model.Play("Idle");
+		}
+		else if (animationString == "walk")
+		{
+			model.Play("Walk");
+		}
+		else if (animationString == "run")
+		{
+			model.Play("Run");
 		}
 	}
 	private void CheckforGuards()
