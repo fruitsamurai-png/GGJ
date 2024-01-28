@@ -41,7 +41,7 @@ public class SecurityBotEnemy : GuardEnemy
         if (m_IsPlayerInFOV && !m_IsStunned)
         {
             IncreaseAlertess();
-            if (m_AlertLevel >= 1.0f && !isAltered)
+            if (m_AlertLevel >= 1.0f && !m_IsAltered)
             {
                 Alert(m_GameObject);
             }
@@ -109,7 +109,7 @@ public class SecurityBotEnemyBehavior : MonoBehaviour
     {
         m_Enemy.Update();
 
-        if (m_Enemy.isAltered)
+        if (m_Enemy.m_IsAltered)
         {
             if (childGameObject.TryGetComponent(out TextBubble tex))
             {

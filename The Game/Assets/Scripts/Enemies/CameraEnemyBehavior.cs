@@ -7,9 +7,6 @@ using Debug = UnityEngine.Debug;
 
 public class CameraIdleState : State
 {
-    //private readonly float m_IdleDuration = 2.0f;
-    //private float m_IdleTime = 0.0f;
-
     public CameraIdleState(StateMachine sm, GameObject go)
     {
         m_Sm = sm;
@@ -35,8 +32,6 @@ public class CameraIdleState : State
 public class CameraPatrollingState : State
 {
     private float m_ElapsedTime = 0.0f;
-
-    private readonly float m_DurationBeforeSwitching = 0.5f;
     private readonly float m_RotationOffset = 90.0f;
 
     private Vector3[] m_FowardVectors;
@@ -65,7 +60,6 @@ public class CameraPatrollingState : State
             m_FowardVectors[i + 1] = rotatedVector1;
         }
         m_Go.transform.forward = m_FowardVectors[m_AngleIndex];
-
         m_CameraEnemy = m_Go.GetComponent<CameraEnemyBehavior>().m_Enemy;
     }
 
@@ -74,7 +68,7 @@ public class CameraPatrollingState : State
         if (!m_CameraEnemy.m_IsPlayerInFOV)
         {
             m_ElapsedTime += Time.deltaTime;
-            if (m_ElapsedTime >= m_DurationBeforeSwitching)
+            if (m_ElapsedTime >= m_CameraEnemy.m_CameraPatrolAngleSwitchInterval)
             {
                 m_ElapsedTime = 0.0f;
                 ChangeAngle();
@@ -122,7 +116,7 @@ public class CameraAlertedState : State
         // but has a large radius of notifying nearby guards when alerted.
         float range = 40.0f;
         m_Enemy.AlertGuardsInVicinity(m_Alterer, range);
-        m_Enemy.isAltered = true;
+        m_Enemy.m_IsAltered = true;
         m_PlayerObject = GameObject.FindWithTag("Player");
     }
 
@@ -144,7 +138,7 @@ public class CameraAlertedState : State
 
     public override void OnExit()
     {
-        m_Enemy.isAltered = false;
+        m_Enemy.m_IsAltered = false;
     }
 }
 public class CameraDistractedState : State
@@ -181,6 +175,7 @@ public class CameraDistractedState : State
 public class CameraEnemy : Enemy
 {
     public Vector3 m_InitialForward;
+    public float m_CameraPatrolAngleSwitchInterval = 0.5f;
 
     public CameraEnemy(GameObject go, EnemyAlertBar enemyAlertBar,  GameObject fovGO) 
         : base(go, enemyAlertBar, fovGO)
@@ -241,6 +236,8 @@ public class CameraEnemyBehavior : MonoBehaviour
     public float m_AlertDecreaseStep = 0.0005f; // decrease half as fast as increase
     public float m_AlertGracePeriod = 2.0f;
 
+    public float m_CameraPatrolAngleSwitchInterval = 0.5f;
+
     void Start()
     {
         GameObject go = Instantiate(fovPrefab, Vector3.zero, Quaternion.identity);
@@ -250,6 +247,7 @@ public class CameraEnemyBehavior : MonoBehaviour
         m_Enemy.m_AlertIncreaseStep = m_AlertIncreaseStep;
         m_Enemy.m_AlertDecreaseStep = m_AlertDecreaseStep;
         m_Enemy.m_AlertGracePeriod = m_AlertGracePeriod;
+        m_Enemy.m_CameraPatrolAngleSwitchInterval = m_CameraPatrolAngleSwitchInterval;
         m_Enemy.Start();
     }
 
@@ -259,6 +257,7 @@ public class CameraEnemyBehavior : MonoBehaviour
         m_Enemy.Update();
     }
 
+#if UNITY_EDITOR
     void OnGUI()
     {
         if (GUI.Button(new Rect(10, 10, 150, 50), "Stun everything for 1(s)"))
@@ -277,6 +276,22 @@ public class CameraEnemyBehavior : MonoBehaviour
                 }
             }
         }
-    }
 
+        string ignoreAlertDebugText = "Alert: ";
+
+        if(Enemy.m_IgnoreAlert)
+        {
+            ignoreAlertDebugText += "off";
+        }
+        else
+        {
+            ignoreAlertDebugText += "on";
+        }
+
+        if (GUI.Button(new Rect(10, 100, 150, 50), ignoreAlertDebugText))
+        {
+            Enemy.m_IgnoreAlert = !Enemy.m_IgnoreAlert;
+        }
+    }
+#endif
 }

@@ -2459,7 +2459,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-133492
+  m_Name: pb_Mesh-4066
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3267,6 +3267,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: RobotGuard
       objectReference: {fileID: 0}
+    - target: {fileID: 1586621234878737750, guid: e80d67117ae5a0442bd798cf6d1a8ce9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4694000120906400602, guid: e80d67117ae5a0442bd798cf6d1a8ce9,
         type: 3}
       propertyPath: m_Mesh
@@ -3489,6 +3494,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Guard
+      objectReference: {fileID: 0}
+    - target: {fileID: 1586621234878737750, guid: 3cd2751e4a5c38047964d38466506158,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2528907877538625153, guid: 3cd2751e4a5c38047964d38466506158,
         type: 3}
@@ -4304,6 +4314,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Camera
+      objectReference: {fileID: 0}
+    - target: {fileID: 4248120388834387107, guid: 5d4cf415a3581ce45995330136e40496,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4248120388834387111, guid: 5d4cf415a3581ce45995330136e40496,
         type: 3}
