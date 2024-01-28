@@ -165,16 +165,15 @@ public class PlayerMovement : MonoBehaviour
 			return;
 		}
 
-		Vector3 forward = closestInteractable.transform.forward;
-		Vector3 relative = gameObject.transform.forward;
-		relative.Normalize();
+        Ray ray = new Ray(gameObject.transform.position, gameObject.transform.forward);
 
-		float dp = math.dot(forward, relative);
-
-        if (dp < 0.1f)
-        {
-            return;
-        }
+		if (Physics.Raycast(ray, out RaycastHit hitInfo, interactRange))
+		{
+			if (hitInfo.transform.gameObject != closestInteractable)
+			{
+				return;
+			}
+		}
 
         UIInteractPrompt.ShowInteractable(closestInteractable);
 
