@@ -17,12 +17,17 @@ public abstract class Enemy
     public bool m_IsPlayerInFOV = false;
     public float m_GroundLevel = 1.0f;
 
+    public float m_IdleDuration = 0.0f;
+
     // FOV
     public float m_Fov = 60.0f;
     public float m_ViewDistance = 5.0f;
 
     // Alert
-    public bool isAltered = false;
+#if UNITY_EDITOR
+    public static bool m_IgnoreAlert = false;
+#endif
+    public bool m_isAltered = false;
     public float m_AlertLevel = 0.0f;
     public float m_AlertGraceElapsedTime = 0.0f;
     public float m_AlertIncreaseStep = 0.001f;
@@ -30,8 +35,8 @@ public abstract class Enemy
     public float m_AlertGracePeriod = 2.0f;
     public Material m_MeshMaterial;
     public Color m_OriginalMaterialColor;
-
     public EnemyAlertBar m_AlertBar;
+
 
     // Stunned
     public int m_Level = 1;
@@ -114,7 +119,7 @@ public abstract class Enemy
         if (m_IsPlayerInFOV && !m_IsStunned)
         {
             IncreaseAlertess();
-            if (m_AlertLevel >= 1.0f && !isAltered)
+            if (m_AlertLevel >= 1.0f && !m_isAltered)
             {
                 Alert(m_GameObject);
             }
@@ -147,6 +152,10 @@ public abstract class Enemy
 
     public virtual void IncreaseAlertess()
     {
+#if UNITY_EDITOR
+     if (m_IgnoreAlert)
+         return; 
+#endif
         m_AlertLevel += m_AlertIncreaseStep;
         m_AlertGraceElapsedTime = 0.0f;
         m_AlertLevel = Math.Clamp(m_AlertLevel, 0.0f, 1.0f);
@@ -154,6 +163,10 @@ public abstract class Enemy
 
     public virtual void DecreaseAlertess()
     {
+#if UNITY_EDITOR
+        if (m_IgnoreAlert)
+            return;
+#endif
         m_AlertLevel -= m_AlertDecreaseStep;
         m_AlertLevel = Math.Clamp(m_AlertLevel, 0.0f, 1.0f);
     }

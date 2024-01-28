@@ -11,14 +11,15 @@ using Debug = UnityEngine.Debug;
 
 public class GuardIdleState : State
 {
-	private readonly float m_IdleDuration = 2.0f;
+	private float m_IdleDuration = 2.0f;
 	private float m_IdleTime = 0.0f;
 
-	public GuardIdleState(StateMachine sm, GameObject go)
+    public GuardIdleState(StateMachine sm, GameObject go, float duration)
 	{
 		m_Sm = sm;
 		m_Go = go;
-	}
+		m_IdleDuration = duration;
+    }
 
 	public override void OnEnter()
 	{
@@ -43,11 +44,10 @@ public class GuardIdleState : State
 public class GuardPatrollingState : State
 {
 	public NavMeshAgent agent;
-	private GameObject painting1;
-	private GameObject painting2;
 
 	// Probably better to have something like a blackboard.
 	private Enemy m_Enemy;
+	private List<Vector3> m_Interactables;
 
 	public GuardPatrollingState(StateMachine sm, GameObject go)
 	{
@@ -55,41 +55,27 @@ public class GuardPatrollingState : State
 		m_Sm = sm;
 		agent = go.GetComponent<NavMeshAgent>();
 
-		painting1 = GameObject.Find("Painting");
-		painting2 = GameObject.Find("Painting (1)");
-
-		if (m_Go.TryGetComponent(out GuardEnemyBehavior geb))
+        if (m_Go.TryGetComponent(out GuardEnemyBehavior geb))
 		{
 			m_Enemy = geb.m_Enemy;
-		}
+			m_Interactables = geb.m_Enemy.m_Interactables;
+        }
 		else if (m_Go.TryGetComponent(out SecurityBotEnemyBehavior sbeb))
 		{
 			m_Enemy = sbeb.m_Enemy;
-		}
+            m_Interactables = sbeb.m_Enemy.m_Interactables;
+        }
 	}
 
-	public override void OnEnter()
+	private Vector3 GetRandomInteractablePosition()
 	{
-		if (painting1 != null && painting2 != null)
-		{
-			Vector3 p1 = painting1.transform.position;
-			Vector3 p2 = painting2.transform.position;
+        return m_Interactables[UnityEngine.Random.Range(0, m_Interactables.Count - 1)];
+    }
 
-			Vector3 p = m_Go.GetComponent<Transform>().position;
-			float sqrLen1 = (p1 - p).sqrMagnitude;
-			float sqrLen2 = (p2 - p).sqrMagnitude;
-			agent.speed = 1.0f * GuardEnemyBehavior.speedMult;
-
-			// For now always path to the further of the two paintings
-			if (sqrLen1 > sqrLen2)
-			{
-				agent.SetDestination(p1);
-			}
-			else
-			{
-				agent.SetDestination(p2);
-			}
-		}
+	public override void OnEnter()
+    {
+        agent.speed = 1.0f * GuardEnemyBehavior.speedMult;
+		agent.SetDestination(GetRandomInteractablePosition());
 	}
 
 	public override void OnUpdate()
@@ -103,7 +89,7 @@ public class GuardPatrollingState : State
 
 		else if (agent.remainingDistance <= 1.0f)
 		{
-			m_Sm.ChangeState(new GuardIdleState(m_Sm, m_Go));
+			m_Sm.ChangeState(new GuardIdleState(m_Sm, m_Go, m_Enemy.m_IdleDuration));
 		}
 
 		//Look for nearby paintings and see if they're stolen
@@ -146,8 +132,6 @@ public class GuardAlertedState : State
 
 	public GameObject m_Player;
 
-	private bool reachedAlerteredDestination = false;
-
 	float repathCooldown = 0f;
 	public GuardAlertedState(StateMachine sm, GameObject go, GameObject alterer, Enemy enemy)
 	{
@@ -170,7 +154,7 @@ public class GuardAlertedState : State
 		}
 
 		m_Enemy.m_AlertLevel = 1.0f; // lol
-		m_Enemy.isAltered = true;
+		m_Enemy.m_isAltered = true;
 		m_Player = GameObject.FindGameObjectWithTag("Player");
 
 		repathCooldown = 0f;
@@ -178,29 +162,6 @@ public class GuardAlertedState : State
 
 	public override void OnUpdate()
 	{
-		//if (!reachedAlerteredDestination)
-		//{
-		//	if (agent.remainingDistance <= 0.5f)
-		//	{
-		//		reachedAlerteredDestination = true;
-		//	}
-		//	return;
-		//}
-
-		//if (reachedAlerteredDestination && m_Enemy.m_IsPlayerInFOV)
-		//{
-		//	agent.speed = 4.0f * GuardEnemyBehavior.speedMult;
-		//	agent.SetDestination(m_Player.transform.position);
-		//}
-		//else
-		//{
-		//	m_Enemy.DecreaseAlertess();
-		//	if (m_Enemy.m_AlertLevel == 0.0f)
-		//	{
-		//		m_Sm.ChangeState(new GuardPatrollingState(m_Sm, m_Go));
-		//	}
-		//}
-
 		agent.speed = 4.0f * GuardEnemyBehavior.speedMult;
 		repathCooldown -= Time.deltaTime;
 		if (repathCooldown <= 0f)
@@ -221,7 +182,7 @@ public class GuardAlertedState : State
 
 	public override void OnExit()
 	{
-		m_Enemy.isAltered = false;
+		m_Enemy.m_isAltered = false;
 	}
 }
 public class GuardDistractedState : State
@@ -274,14 +235,22 @@ public class GuardDistractedState : State
 }
 public class GuardEnemy : Enemy
 {
+	public List<Vector3> m_Interactables;
+
 	public GuardEnemy(GameObject go, EnemyAlertBar enemyAlertBar, GameObject fovPrebInstance)
 		: base(go, enemyAlertBar, fovPrebInstance)
 	{
 		m_EnemyStateMachine = new StateMachine();
 		m_GameObject = go;
-	}
+		m_Interactables = new List<Vector3>();
+
+        foreach (GameObject interactable in GameObject.FindGameObjectsWithTag("Interactable"))
+        {
+            m_Interactables.Add(interactable.transform.position);
+        }
+    }
 	public override void Start()
-	{
+    {
 		m_EnemyStateMachine.ChangeState(new GuardPatrollingState(m_EnemyStateMachine, m_GameObject));
 	}
 
@@ -322,7 +291,7 @@ public class GuardEnemy : Enemy
 		{
 			enemy = sbeb.m_Enemy;
 		}
-		if (!enemy.isAltered)
+		if (!enemy.m_isAltered)
 		{
 			m_EnemyStateMachine.ChangeState(new GuardAlertedState(m_EnemyStateMachine, m_GameObject, alerter, enemy));
 		}
@@ -343,6 +312,9 @@ public class GuardEnemyBehavior : MonoBehaviour
     public float m_AlertIncreaseStep = 0.001f;
     public float m_AlertDecreaseStep = 0.0005f; // decrease half as fast as increase
     public float m_AlertGracePeriod = 2.0f;
+
+	public float m_IdleDuration = 2.0f;
+
     void Start()
 	{
 		GameObject newFovGO = Instantiate(fovPrebInstance,Vector3.zero,Quaternion.identity);
@@ -352,6 +324,7 @@ public class GuardEnemyBehavior : MonoBehaviour
         m_Enemy.m_AlertIncreaseStep = m_AlertIncreaseStep;
         m_Enemy.m_AlertDecreaseStep = m_AlertDecreaseStep;
         m_Enemy.m_AlertGracePeriod = m_AlertGracePeriod;
+        m_Enemy.m_IdleDuration = m_IdleDuration;
         m_Enemy.Start();
 	}
 
@@ -359,7 +332,7 @@ public class GuardEnemyBehavior : MonoBehaviour
 	void Update()
 	{
 		m_Enemy.Update();
-		if (m_Enemy.isAltered)
+		if (m_Enemy.m_isAltered)
 		{
 			//if (childGameObject.TryGetComponent(out TextBubble tex))
 			//{
