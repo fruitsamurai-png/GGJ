@@ -19,8 +19,14 @@ public class UIStealArtwork : MonoBehaviour
 
 	GameObject player;
 
+	AudioSource audioPlayer;
+	public AudioClip openSfx;
+	public AudioClip stealSfx;
+	public AudioClip replaceSfx;
+
 	void Awake()
 	{
+		audioPlayer = GetComponent<AudioSource>();
 		player = GameObject.FindWithTag("Player");
 		instance = this;
 	}
@@ -59,17 +65,23 @@ public class UIStealArtwork : MonoBehaviour
 	{
 		targetedArtwork = targetArt;
 		gameObject.SetActive(true);
+
+		audioPlayer.PlayOneShot(openSfx, 1f);
 	}
 
 	public void StealButton()
 	{
 		targetedArtwork.Steal(player);
 		UpdateDisplay();
+
+		audioPlayer.PlayOneShot(stealSfx, 1f);
 	}
 	public void ReplaceButton()
 	{
 		targetedArtwork.Replace(AbilityPassiveManager.AILevel);
 		UpdateDisplay();
+
+		audioPlayer.PlayOneShot(replaceSfx, 1f);
 	}
 	public void CloseButton()
 	{
