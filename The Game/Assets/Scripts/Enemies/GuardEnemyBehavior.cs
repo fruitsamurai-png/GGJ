@@ -331,19 +331,28 @@ public class GuardEnemy : Enemy
 
 public class GuardEnemyBehavior : MonoBehaviour
 {
-	public Material fovMaterial;
 	public GuardEnemy m_Enemy;
 
 	public EnemyAlertBar alertBar;
 	public GameObject fovPrebInstance;
 
 	public static float speedMult = 1.0f;
-	void Start()
+
+    public float m_Fov = 40.0f;
+    public float m_ViewDistance = 5.0f;
+    public float m_AlertIncreaseStep = 0.001f;
+    public float m_AlertDecreaseStep = 0.0005f; // decrease half as fast as increase
+    public float m_AlertGracePeriod = 2.0f;
+    void Start()
 	{
 		GameObject newFovGO = Instantiate(fovPrebInstance,Vector3.zero,Quaternion.identity);
 		m_Enemy = new GuardEnemy(gameObject, alertBar, newFovGO);
-		m_Enemy.Start();
-
+        m_Enemy.m_Fov = m_Fov;
+        m_Enemy.m_ViewDistance = m_ViewDistance;
+        m_Enemy.m_AlertIncreaseStep = m_AlertIncreaseStep;
+        m_Enemy.m_AlertDecreaseStep = m_AlertDecreaseStep;
+        m_Enemy.m_AlertGracePeriod = m_AlertGracePeriod;
+        m_Enemy.Start();
 	}
 
 	// Update is called once per frame

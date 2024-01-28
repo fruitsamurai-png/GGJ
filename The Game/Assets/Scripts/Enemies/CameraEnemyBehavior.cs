@@ -109,7 +109,6 @@ public class CameraAlertedState : State
     private GameObject m_PlayerObject;
     private Enemy m_Enemy;
 
-    
     public CameraAlertedState(StateMachine sm, GameObject go, GameObject alterer, Enemy enemy)
     {
         m_Go = go;
@@ -231,15 +230,26 @@ public class CameraEnemy : Enemy
 
 public class CameraEnemyBehavior : MonoBehaviour
 {
-    //public Material fovMaterial;
     public GameObject fovPrefab;
     public CameraEnemy m_Enemy;
     public EnemyAlertBar alertBar;
+
+    public float m_Fov = 40.0f;
+    public float m_ViewDistance = 5.0f;
+
+    public float m_AlertIncreaseStep = 0.001f;
+    public float m_AlertDecreaseStep = 0.0005f; // decrease half as fast as increase
+    public float m_AlertGracePeriod = 2.0f;
 
     void Start()
     {
         GameObject go = Instantiate(fovPrefab, Vector3.zero, Quaternion.identity);
         m_Enemy = new CameraEnemy(gameObject, alertBar, go);
+        m_Enemy.m_Fov = m_Fov;
+        m_Enemy.m_ViewDistance = m_ViewDistance;
+        m_Enemy.m_AlertIncreaseStep = m_AlertIncreaseStep;
+        m_Enemy.m_AlertDecreaseStep = m_AlertDecreaseStep;
+        m_Enemy.m_AlertGracePeriod = m_AlertGracePeriod;
         m_Enemy.Start();
     }
 

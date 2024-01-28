@@ -25,8 +25,9 @@ public abstract class Enemy
     public bool isAltered = false;
     public float m_AlertLevel = 0.0f;
     public float m_AlertGraceElapsedTime = 0.0f;
-    public float m_AlertStepAmount = 0.001f;
-    public readonly float m_AlertGracePeriod = 2.0f;
+    public float m_AlertIncreaseStep = 0.001f;
+    public float m_AlertDecreaseStep = 0.0005f; // decrease half as fast as increase
+    public float m_AlertGracePeriod = 2.0f;
     public Material m_MeshMaterial;
     public Color m_OriginalMaterialColor;
 
@@ -146,14 +147,14 @@ public abstract class Enemy
 
     public virtual void IncreaseAlertess()
     {
-        m_AlertLevel += m_AlertStepAmount;
+        m_AlertLevel += m_AlertIncreaseStep;
         m_AlertGraceElapsedTime = 0.0f;
         m_AlertLevel = Math.Clamp(m_AlertLevel, 0.0f, 1.0f);
     }
 
     public virtual void DecreaseAlertess()
     {
-        m_AlertLevel -= m_AlertStepAmount / 2.0f;
+        m_AlertLevel -= m_AlertDecreaseStep;
         m_AlertLevel = Math.Clamp(m_AlertLevel, 0.0f, 1.0f);
     }
     public virtual void DrawFOVCone()

@@ -69,18 +69,33 @@ public class SecurityBotEnemy : GuardEnemy
 
 public class SecurityBotEnemyBehavior : MonoBehaviour
 {
-    public Material fovMaterial;
     public SecurityBotEnemy m_Enemy;
     GameObject childGameObject;
     public EnemyAlertBar alertBar;
     public GameObject fovPrefab;
+
+    // FOV
+    public float m_Fov = 360.0f;
+    public float m_ViewDistance = 10.0f;
+
+    // Alert
+    public float m_AlertGraceElapsedTime = 0.0f;
+    public float m_AlertIncreaseStep = 0.001f;
+    public float m_AlertDecreaseStep = 0.0005f; // decrease half as fast as increase
+    public float m_AlertGracePeriod = 2.0f;
+
     // Start is called before the first frame update
     void Start()
     {
         GameObject go = Instantiate(fovPrefab, Vector3.zero, Quaternion.identity);
         m_Enemy = new SecurityBotEnemy(gameObject,alertBar, go);
-        m_Enemy.m_Fov = 360.0f;
-        m_Enemy.m_ViewDistance = 10.0f;
+
+        m_Enemy.m_Fov = m_Fov;
+        m_Enemy.m_ViewDistance = m_ViewDistance;
+        m_Enemy.m_AlertIncreaseStep = m_AlertIncreaseStep;
+        m_Enemy.m_AlertDecreaseStep = m_AlertDecreaseStep;
+        m_Enemy.m_AlertGracePeriod = m_AlertGracePeriod;
+
         m_Enemy.Start();
         // Get the child Transform
         Transform childTransform = gameObject.transform.GetChild(1);
