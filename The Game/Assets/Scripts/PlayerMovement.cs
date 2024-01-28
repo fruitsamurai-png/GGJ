@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
@@ -96,16 +97,23 @@ public class PlayerMovement : MonoBehaviour
 		}
 		if (closestEnemy.TryGetComponent(out SecurityBotEnemyBehavior sec))
 		{
-			collided = sec.m_Enemy.m_IsAltered;
-			return;
+			collided = sec.m_Enemy.m_IsAlerted;
+            Caught();
+            return;
 		}
 		if (closestEnemy.TryGetComponent(out GuardEnemyBehavior gua))
 		{
-			collided = gua.m_Enemy.m_IsAltered;
-			return;
+			collided = gua.m_Enemy.m_IsAlerted;
+            Caught();
+            return;
 		}
 	}
-	void InteractNearby(bool activate = true)
+    void Caught()
+    {
+        UIPostHeistMegaController.playerWasCaught = true;
+        SceneManager.LoadScene("PostHeist");
+    }
+    void InteractNearby(bool activate = true)
 	{
 		float interactRange = 1.5f;
 		float closestDistance = 10000f;
@@ -151,4 +159,41 @@ public class PlayerMovement : MonoBehaviour
 			return;
 		}
 	}
+
+#if UNITY_EDITOR
+    void OnGUI()
+    {
+        if (GUI.Button(new Rect(500, 5, 150, 50), "Stun everything for 1(s)"))
+        {
+            string[] layerMask = { "Default", "Guards" };
+            foreach (Collider c in Physics.OverlapSphere(transform.position, 1000.0f, LayerMask.GetMask(layerMask)))
+            {
+                GameObject o = c.gameObject;
+                if (o.TryGetComponent(out CameraEnemyBehavior ceb))
+                {
+                    ceb.m_Enemy.Jailbreak(99, 1.0f);
+                }
+                if (o.TryGetComponent(out GuardEnemyBehavior geb))
+                {
+                    geb.m_Enemy.Jailbreak(99, 1.0f);
+                }
+            }
+        }
+        string ignoreAlertDebugText = "Alert: ";
+
+        if (Enemy.m_IgnoreAlert)
+        {
+            ignoreAlertDebugText += "off";
+        }
+        else
+        {
+            ignoreAlertDebugText += "on";
+        }
+
+        if (GUI.Button(new Rect(500, 60, 150, 50), ignoreAlertDebugText))
+        {
+            Enemy.m_IgnoreAlert = !Enemy.m_IgnoreAlert;
+        }
+    }
+#endif
 }

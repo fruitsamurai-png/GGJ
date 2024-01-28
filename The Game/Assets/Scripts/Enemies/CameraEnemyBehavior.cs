@@ -65,7 +65,11 @@ public class CameraPatrollingState : State
 
     public override void OnUpdate()
     {
-        if (!m_CameraEnemy.m_IsPlayerInFOV)
+        bool checkUpdateAngle = !m_CameraEnemy.m_IsPlayerInFOV;
+#if UNITY_EDITOR
+        checkUpdateAngle |= Enemy.m_IgnoreAlert;
+#endif
+        if (checkUpdateAngle)
         {
             m_ElapsedTime += Time.deltaTime;
             if (m_ElapsedTime >= m_CameraEnemy.m_CameraPatrolAngleSwitchInterval)
@@ -116,7 +120,7 @@ public class CameraAlertedState : State
         // but has a large radius of notifying nearby guards when alerted.
         float range = 40.0f;
         m_Enemy.AlertGuardsInVicinity(m_Alterer, range);
-        m_Enemy.m_IsAltered = true;
+        m_Enemy.m_IsAlerted = true;
         m_PlayerObject = GameObject.FindWithTag("Player");
     }
 
@@ -138,7 +142,7 @@ public class CameraAlertedState : State
 
     public override void OnExit()
     {
-        m_Enemy.m_IsAltered = false;
+        m_Enemy.m_IsAlerted = false;
     }
 }
 public class CameraDistractedState : State
@@ -236,7 +240,7 @@ public class CameraEnemyBehavior : MonoBehaviour
     public float m_AlertDecreaseStep = 0.0005f; // decrease half as fast as increase
     public float m_AlertGracePeriod = 2.0f;
 
-    public float m_CameraPatrolAngleSwitchInterval = 0.5f;
+    public float m_AngleSwitchInterval = 0.5f;
 
     void Start()
     {
@@ -247,7 +251,7 @@ public class CameraEnemyBehavior : MonoBehaviour
         m_Enemy.m_AlertIncreaseStep = m_AlertIncreaseStep;
         m_Enemy.m_AlertDecreaseStep = m_AlertDecreaseStep;
         m_Enemy.m_AlertGracePeriod = m_AlertGracePeriod;
-        m_Enemy.m_CameraPatrolAngleSwitchInterval = m_CameraPatrolAngleSwitchInterval;
+        m_Enemy.m_CameraPatrolAngleSwitchInterval = m_AngleSwitchInterval;
         m_Enemy.Start();
     }
 
@@ -257,41 +261,4 @@ public class CameraEnemyBehavior : MonoBehaviour
         m_Enemy.Update();
     }
 
-#if UNITY_EDITOR
-    void OnGUI()
-    {
-        if (GUI.Button(new Rect(10, 10, 150, 50), "Stun everything for 1(s)"))
-        {
-            string[] layerMask = { "Default", "Guards" };
-            foreach (Collider c in Physics.OverlapSphere(transform.position, 1000.0f, LayerMask.GetMask(layerMask)))
-            {
-                GameObject o = c.gameObject;
-                if (o.TryGetComponent(out CameraEnemyBehavior ceb))
-                {
-                    ceb.m_Enemy.Jailbreak(99, 1.0f);
-                }
-                if (o.TryGetComponent(out GuardEnemyBehavior geb))
-                {
-                    geb.m_Enemy.Jailbreak(99, 1.0f);
-                }
-            }
-        }
-
-        string ignoreAlertDebugText = "Alert: ";
-
-        if(Enemy.m_IgnoreAlert)
-        {
-            ignoreAlertDebugText += "off";
-        }
-        else
-        {
-            ignoreAlertDebugText += "on";
-        }
-
-        if (GUI.Button(new Rect(10, 100, 150, 50), ignoreAlertDebugText))
-        {
-            Enemy.m_IgnoreAlert = !Enemy.m_IgnoreAlert;
-        }
-    }
-#endif
 }

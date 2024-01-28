@@ -6,7 +6,6 @@ using System.Diagnostics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
-
 using Debug = UnityEngine.Debug;
 
 public class GuardIdleState : State
@@ -74,13 +73,13 @@ public class GuardPatrollingState : State
 
 	public override void OnEnter()
     {
-        agent.speed = 1.0f * GuardEnemyBehavior.speedMult;
+        agent.speed = m_Enemy.m_PatrolSpeed * GuardEnemyBehavior.speedMult;
 		agent.SetDestination(GetRandomInteractablePosition());
 	}
 
 	public override void OnUpdate()
 	{
-		agent.speed = 1.0f * GuardEnemyBehavior.speedMult;
+		agent.speed = m_Enemy.m_PatrolSpeed * GuardEnemyBehavior.speedMult;
 
 		if (m_Enemy.m_AlertLevel >= 1.0f)
 		{
@@ -150,12 +149,12 @@ public class GuardAlertedState : State
 		// Maybe shouldn't path there
 		if (m_Alterer != null)
 		{
-			agent.speed = 8.0f * GuardEnemyBehavior.speedMult;
+			agent.speed = m_Enemy.m_PursuitSpeed * GuardEnemyBehavior.speedMult;
 			agent.SetDestination(m_Alterer.transform.position);
 		}
 
 		m_Enemy.m_AlertLevel = 1.0f; // lol
-		m_Enemy.m_IsAltered = true;
+		m_Enemy.m_IsAlerted = true;
 		m_Player = GameObject.FindGameObjectWithTag("Player");
 
 		repathCooldown = 0f;
@@ -163,7 +162,7 @@ public class GuardAlertedState : State
 
 	public override void OnUpdate()
 	{
-		agent.speed = 12.0f * GuardEnemyBehavior.speedMult;
+		agent.speed = m_Enemy.m_PursuitSpeed * GuardEnemyBehavior.speedMult;
 		repathCooldown -= Time.deltaTime;
 		if (repathCooldown <= 0f)
 		{
@@ -183,7 +182,7 @@ public class GuardAlertedState : State
 
 	public override void OnExit()
 	{
-		m_Enemy.m_IsAltered = false;
+		m_Enemy.m_IsAlerted = false;
 	}
 }
 public class GuardDistractedState : State
@@ -192,25 +191,36 @@ public class GuardDistractedState : State
 	public GameObject m_Alterer;
 
 	float distractedTime = 0f;
+	public Enemy m_Enemy;
 	public GuardDistractedState(StateMachine sm, GameObject go, GameObject alterer)
 	{
 		m_Go = go;
 		m_Sm = sm;
 		agent = go.GetComponent<NavMeshAgent>();
 		m_Alterer = alterer;
-	}
+
+        if (m_Go.TryGetComponent(out GuardEnemyBehavior geb))
+        {
+            m_Enemy = geb.m_Enemy;
+        }
+
+        if (m_Go.TryGetComponent(out SecurityBotEnemyBehavior sbeb))
+        {
+            m_Enemy = sbeb.m_Enemy;
+        }
+    }
 	public override void OnEnter()
 	{
 		if (m_Alterer != null)
 		{
-			agent.speed = 8.0f * GuardEnemyBehavior.speedMult;
+			agent.speed = m_Enemy.m_DistractedSpeed * GuardEnemyBehavior.speedMult;
 			agent.SetDestination(m_Alterer.transform.position);
 		}
 	}
 
 	public override void OnUpdate()
 	{
-		agent.speed = 8.0f * GuardEnemyBehavior.speedMult;
+		agent.speed = m_Enemy.m_DistractedSpeed * GuardEnemyBehavior.speedMult;
 
 		if (distractedTime <= 0f)
 		{
@@ -293,7 +303,7 @@ public class GuardEnemy : Enemy
 		{
 			enemy = sbeb.m_Enemy;
 		}
-		if (!enemy.m_IsAltered)
+		if (!enemy.m_IsAlerted)
 		{
 			m_EnemyStateMachine.ChangeState(new GuardAlertedState(m_EnemyStateMachine, m_GameObject, alerter, enemy));
 		}
@@ -317,6 +327,11 @@ public class GuardEnemyBehavior : MonoBehaviour
 
 	public float m_IdleDuration = 2.0f;
 
+    // Speed
+    public float m_PatrolSpeed = 1.0f;
+    public float m_DistractedSpeed = 8.0f;
+    public float m_PursuitSpeed = 12.0f;
+
     void Start()
 	{
 		GameObject newFovGO = Instantiate(fovPrebInstance,Vector3.zero,Quaternion.identity);
@@ -327,14 +342,17 @@ public class GuardEnemyBehavior : MonoBehaviour
         m_Enemy.m_AlertDecreaseStep = m_AlertDecreaseStep;
         m_Enemy.m_AlertGracePeriod = m_AlertGracePeriod;
         m_Enemy.m_IdleDuration = m_IdleDuration;
-        m_Enemy.Start();
+        m_Enemy.m_PatrolSpeed = m_PatrolSpeed;
+        m_Enemy.m_DistractedSpeed = m_DistractedSpeed;
+        m_Enemy.m_PursuitSpeed = m_PursuitSpeed;
+    m_Enemy.Start();
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
 		m_Enemy.Update();
-		if (m_Enemy.m_IsAltered)
+		if (m_Enemy.m_IsAlerted)
 		{
 			//if (childGameObject.TryGetComponent(out TextBubble tex))
 			//{
