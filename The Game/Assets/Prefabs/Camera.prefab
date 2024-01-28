@@ -212,7 +212,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3ecf9cc183f2eb4e8f5bfd142819309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fovMaterial: {fileID: 2100000, guid: 8817b244da8426b49968d6ebf3edf448, type: 2}
+  fovPrefab: {fileID: 648726471481843085, guid: bd657f7bb5fd0ac46a7e5959e5561957,
+    type: 3}
   alertBar: {fileID: 1328515759028300783}
 --- !u!1001 &6042743956305186511
 PrefabInstance:

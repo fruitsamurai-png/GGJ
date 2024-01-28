@@ -7,8 +7,8 @@ public class SecurityBotEnemy : GuardEnemy
     public bool InRange = false;
     public bool RayHit = false;
 
-    public SecurityBotEnemy(GameObject go, EnemyAlertBar enemyAlertBar, Material fovMaterial)
-        : base(go, enemyAlertBar, fovMaterial)
+    public SecurityBotEnemy(GameObject go, EnemyAlertBar enemyAlertBar, GameObject fovGO)
+        : base(go, enemyAlertBar, fovGO)
     {
     }
 
@@ -72,13 +72,13 @@ public class SecurityBotEnemyBehavior : MonoBehaviour
     public Material fovMaterial;
     public SecurityBotEnemy m_Enemy;
     GameObject childGameObject;
-
     public EnemyAlertBar alertBar;
-
+    public GameObject fovPrefab;
     // Start is called before the first frame update
     void Start()
     {
-        m_Enemy = new SecurityBotEnemy(gameObject, alertBar, fovMaterial);
+        GameObject go = Instantiate(fovPrefab, Vector3.zero, Quaternion.identity);
+        m_Enemy = new SecurityBotEnemy(gameObject,alertBar, go);
         m_Enemy.m_Fov = 360.0f;
         m_Enemy.m_ViewDistance = 10.0f;
         m_Enemy.Start();

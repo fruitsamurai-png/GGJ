@@ -13,12 +13,13 @@ public abstract class Enemy
     public StateMachine m_EnemyStateMachine;
     public GameObject m_GameObject;
 
+
     public GameObject m_PlayerObject;
     public bool m_IsPlayerInFOV = false;
     public float m_GroundLevel = 1.0f;
 
     // FOV
-    public LineRenderer m_LineRenderer;
+    //public LineRenderer m_LineRenderer;
     public float m_Fov = 60.0f;
     public float m_ViewDistance = 5.0f;
     private int FOVLayerExcludeMask = 0;
@@ -40,22 +41,23 @@ public abstract class Enemy
     public float m_StunnedDuration = 1.0f;
 
     private Mesh fovMesh;
-    protected Enemy(GameObject gameObject, EnemyAlertBar enemyAlertBar, Material fovMaterial)
+    private List<Vector3> newVertices = new List<Vector3>();
+    private List<int> newTriangles = new List<int>();
+    protected Enemy(GameObject gameObject, EnemyAlertBar enemyAlertBar , GameObject fovGameObject)
     {
         m_GameObject = gameObject;
+        //m_LineRenderer = m_GameObject.GetComponent<LineRenderer>();
+        //if (m_LineRenderer == null)
+        //{
+        //    m_GameObject.AddComponent<LineRenderer>();
+        //}
+
         m_AlertBar = enemyAlertBar;
-
-        m_LineRenderer = m_GameObject.GetComponent<LineRenderer>();
-        fovMesh = GameObject.Find("Fov").GetComponent<MeshFilter>().mesh;
-        if (m_LineRenderer == null)
-        {
-            m_GameObject.AddComponent<LineRenderer>();
-        }
-
-        m_LineRenderer.useWorldSpace = true;
-        m_LineRenderer.positionCount = 4;
-        m_LineRenderer.widthMultiplier = 0.04f;
-        m_LineRenderer.material = fovMaterial;
+        fovMesh = fovGameObject.GetComponent<MeshFilter>().mesh;
+        //m_LineRenderer.useWorldSpace = true;
+        //m_LineRenderer.positionCount = 4;
+        //m_LineRenderer.widthMultiplier = 0.04f;
+        //m_LineRenderer.material = fovMaterial;
 
         m_MeshMaterial = m_GameObject.GetComponent<MeshRenderer>().material;
         m_OriginalMaterialColor = m_MeshMaterial.color;
@@ -180,19 +182,20 @@ public abstract class Enemy
    
     public virtual void DrawFOVCone()
     {
-        // Doesn't really work well for angles > 180..
-        if (m_Fov >= 180.0f)
-            return;
 
-        int segments =12; 
-        int numVertices = segments + 2;
-        Vector3[] newVertices = new Vector3[numVertices];
-        int[] newTriangles = new int[segments * 3];
+        newVertices.Clear();
+        newTriangles.Clear();
 
+        m_Fov = Mathf.Clamp(m_Fov, 0, 360);
+
+        int segments = m_Fov > 180 ? 48 : 12; 
+        int numVertices = m_Fov == 360 ? segments + 3: segments + 2;
+      
+     
         Vector3 origin = m_GameObject.transform.position + m_GameObject.transform.forward * 0.5f;
         origin.y = m_GroundLevel;
         //origin
-        newVertices[0] = origin;
+        newVertices.Add(origin);
         float angleInterval = m_Fov / segments;
         float startAngle = -m_Fov * 0.5f;
         int i;
@@ -209,19 +212,35 @@ public abstract class Enemy
             }
             startAngle += angleInterval;
             pt.y = m_GroundLevel;
-            newVertices[i + 1] = pt;
+            newVertices.Add(pt);
+            //newVertices[i + 1] = pt;
         }
+      
         for ( i = 0; i < segments; ++i)
         {
-            newTriangles[i] = 0;
-            newTriangles[(i * 3) + 1] = i+1;
-            newTriangles[(i * 3) + 2] = i+2;
+            newTriangles.Add(0);
+            newTriangles.Add(i+1);
+            newTriangles.Add(i+2);
+
+            //newTriangles[i] = 0;
+            //newTriangles[(i * 3) + 1] = i+1;
+            //newTriangles[(i * 3) + 2] = i+2;
+        }
+        if (m_Fov == 360)
+        {
+            newVertices.Add(newVertices[0]);
+
+            int last = newTriangles[newTriangles.Count - 1];
+            int second = newTriangles[1];
+            newTriangles.Add(0);
+            newTriangles.Add(last);
+            newTriangles.Add(second);
+
         }
 
-       
         fovMesh.Clear();
-        fovMesh.vertices = newVertices;
-        fovMesh.triangles = newTriangles;
+        fovMesh.vertices = newVertices.ToArray();
+        fovMesh.triangles = newTriangles.ToArray();
       
         //Vector3 foward = m_GameObject.transform.forward;
         //float rotationAngle = m_Fov / 2.0f;

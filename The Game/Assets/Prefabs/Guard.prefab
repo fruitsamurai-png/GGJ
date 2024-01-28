@@ -219,6 +219,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fovMaterial: {fileID: 2100000, guid: 8817b244da8426b49968d6ebf3edf448, type: 2}
   alertBar: {fileID: 4086135688896001114}
+  fovPrebInstance: {fileID: 648726471481843085, guid: bd657f7bb5fd0ac46a7e5959e5561957,
+    type: 3}
 --- !u!195 &489966971
 NavMeshAgent:
   m_ObjectHideFlags: 0
