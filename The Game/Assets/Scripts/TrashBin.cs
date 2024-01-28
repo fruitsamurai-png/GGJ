@@ -8,8 +8,10 @@ public class TrashBin : MonoBehaviour
 
 	private Rigidbody rb;
 	private Collider mainCollider;
-	// Start is called before the first frame update
-	void Start()
+
+    public AudioClip onSfx;
+    // Start is called before the first frame update
+    void Start()
 	{
 		rb = GetComponent<Rigidbody>();
 		mainCollider = GetComponent<Collider>();
@@ -43,9 +45,15 @@ public class TrashBin : MonoBehaviour
 			{
 				gb.NotifyDistraction(gameObject);
 			}
+
+			if(o.TryGetComponent(out SecurityBotEnemyBehavior sbeb))
+			{
+                sbeb.m_Enemy.NotifyDistraction(gameObject);
+			}
 		}
 
-	}
+        GetComponent<AudioSource>().PlayOneShot(onSfx);
+    }
 	private void OnCollisionEnter(Collision collision)
 	{
 		//if (collision != null)
