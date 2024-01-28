@@ -36,6 +36,7 @@ Transform:
   m_Children:
   - {fileID: 1465140199038660071}
   - {fileID: 6118062445833755752}
+  - {fileID: 8519342688110922486}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -237,6 +238,94 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fovMaterial: {fileID: 2100000, guid: 8817b244da8426b49968d6ebf3edf448, type: 2}
+  alertBar: {fileID: 8296228804364963359}
+--- !u!1001 &3643928542135184191
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1586621234878737746}
+    m_Modifications:
+    - target: {fileID: 4948080202672742857, guid: 8bc66ea5166d0aa4ea9fe20a16800d6c,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948080202672742857, guid: 8bc66ea5166d0aa4ea9fe20a16800d6c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948080202672742857, guid: 8bc66ea5166d0aa4ea9fe20a16800d6c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948080202672742857, guid: 8bc66ea5166d0aa4ea9fe20a16800d6c,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948080202672742857, guid: 8bc66ea5166d0aa4ea9fe20a16800d6c,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948080202672742857, guid: 8bc66ea5166d0aa4ea9fe20a16800d6c,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948080202672742857, guid: 8bc66ea5166d0aa4ea9fe20a16800d6c,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948080202672742857, guid: 8bc66ea5166d0aa4ea9fe20a16800d6c,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948080202672742857, guid: 8bc66ea5166d0aa4ea9fe20a16800d6c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948080202672742857, guid: 8bc66ea5166d0aa4ea9fe20a16800d6c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948080202672742857, guid: 8bc66ea5166d0aa4ea9fe20a16800d6c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6275314421211150330, guid: 8bc66ea5166d0aa4ea9fe20a16800d6c,
+        type: 3}
+      propertyPath: m_Name
+      value: EnemyAlertOverhead
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8bc66ea5166d0aa4ea9fe20a16800d6c, type: 3}
+--- !u!114 &8296228804364963359 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4734397664590193952, guid: 8bc66ea5166d0aa4ea9fe20a16800d6c,
+    type: 3}
+  m_PrefabInstance: {fileID: 3643928542135184191}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cd060bae681e6a4eb4bbacfde500495, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &8519342688110922486 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4948080202672742857, guid: 8bc66ea5166d0aa4ea9fe20a16800d6c,
+    type: 3}
+  m_PrefabInstance: {fileID: 3643928542135184191}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6011461199263792003
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -347,7 +436,7 @@ PrefabInstance:
     - target: {fileID: 3852535685531603926, guid: 20104fc1291cda645a7bbc3d111bc77b,
         type: 3}
       propertyPath: m_VersionIndex
-      value: 1482
+      value: 1485
       objectReference: {fileID: 0}
     - target: {fileID: 6919708026672577899, guid: 20104fc1291cda645a7bbc3d111bc77b,
         type: 3}

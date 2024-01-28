@@ -183,8 +183,8 @@ public class CameraEnemy : Enemy
 {
     public Vector3 m_InitialForward;
 
-    public CameraEnemy(GameObject go, Material fovMaterial) 
-        : base(go, fovMaterial)
+    public CameraEnemy(GameObject go, EnemyAlertBar enemyAlertBar, Material fovMaterial) 
+        : base(go, enemyAlertBar, fovMaterial)
     {
         m_EnemyStateMachine = new StateMachine();
         m_GameObject = go;
@@ -233,9 +233,11 @@ public class CameraEnemyBehavior : MonoBehaviour
     public Material fovMaterial;
 
     public CameraEnemy m_Enemy;
+    public EnemyAlertBar alertBar;
+
     void Start()
     {
-        m_Enemy = new CameraEnemy(gameObject, fovMaterial);
+        m_Enemy = new CameraEnemy(gameObject, alertBar, fovMaterial);
         m_Enemy.Start();
     }
 
