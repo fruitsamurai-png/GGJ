@@ -14,7 +14,8 @@ public abstract class Enemy
     public GameObject m_GameObject;
 
     public GameObject m_PlayerObject;
-    public bool IsPlayerInFOV = false;
+    public bool m_IsPlayerInFOV = false;
+    public float m_GroundLevel = 1.0f;
 
     // FOV
     public LineRenderer m_LineRenderer;
@@ -29,6 +30,7 @@ public abstract class Enemy
     public float m_AlertStepAmount = 0.001f;
     public readonly float m_AlertGracePeriod = 2.0f;
     public Material m_MeshMaterial;
+    public Color m_OriginalMaterialColor;
 
     // Stunned
     public int m_Level = 1;
@@ -51,6 +53,7 @@ public abstract class Enemy
         m_LineRenderer.material = fovMaterial;
 
         m_MeshMaterial = m_GameObject.GetComponent<MeshRenderer>().material;
+        m_OriginalMaterialColor = m_MeshMaterial.color;
         m_PlayerObject = GameObject.FindGameObjectWithTag("Player");
 
         FOVLayerExcludeMask |= LayerMask.NameToLayer("Guards");
@@ -111,11 +114,11 @@ public abstract class Enemy
         {
             if (hitInfo.distance < m_ViewDistance)
             {
-                IsPlayerInFOV |= (m_PlayerObject == hitInfo.transform.gameObject);
+                m_IsPlayerInFOV |= (m_PlayerObject == hitInfo.transform.gameObject);
             }
         }
 
-        if (IsPlayerInFOV && !m_IsStunned)
+        if (m_IsPlayerInFOV && !m_IsStunned)
         {
             IncreaseAlertess();
             if (m_AlertLevel >= 1.0f && !isAltered)
@@ -138,7 +141,7 @@ public abstract class Enemy
         }
         else
         {
-            m_MeshMaterial.color= Color.LerpUnclamped(Color.white, Color.red, m_AlertLevel);
+            m_MeshMaterial.color = Color.LerpUnclamped(m_OriginalMaterialColor, Color.red, m_AlertLevel);
         }
     }
 
@@ -166,6 +169,9 @@ public abstract class Enemy
     public virtual void DrawFOVCone()
     {
         // Doesn't really work well for angles > 180..
+        if (m_Fov >= 180.0f)
+            return;
+
         Vector3 foward = m_GameObject.transform.forward;
         float rotationAngle = m_Fov / 2.0f;
 
@@ -191,7 +197,7 @@ public abstract class Enemy
             if (hitInfo1.distance < m_ViewDistance)
             {
                 bool IsHitPlayer = (hitInfo1.transform.gameObject == m_PlayerObject);
-                IsPlayerInFOV |= IsHitPlayer;
+                m_IsPlayerInFOV |= IsHitPlayer;
 
                 bool isValidHit = IsValidFOVHitTarget(hitInfo1.transform.gameObject.layer);
                 if (isValidHit) // Weird to clip cone to player I think
@@ -206,7 +212,7 @@ public abstract class Enemy
             if (hitInfo2.distance < m_ViewDistance)
             {
                 bool IsHitPlayer = (hitInfo2.transform.gameObject == m_PlayerObject);
-                IsPlayerInFOV |= IsHitPlayer;
+                m_IsPlayerInFOV |= IsHitPlayer;
 
                 bool isValidHit = IsValidFOVHitTarget(hitInfo2.transform.gameObject.layer);
                 if (isValidHit) // Weird to clip cone to player I think
@@ -216,11 +222,21 @@ public abstract class Enemy
             }
         }
 
-        const float groundLevel = 1.0f;
-        p0.y = groundLevel;
-        p1.y = groundLevel;
-        p2.y = groundLevel;
-        p3.y = groundLevel;
+		if (m_IsPlayerInFOV)
+		{
+			if(Physics.Linecast(m_GameObject.transform.position,m_PlayerObject.transform.position,out RaycastHit hf))
+			{
+				if(hf.collider.gameObject != m_PlayerObject)
+				{
+					m_IsPlayerInFOV = false;
+				}
+			}
+		}
+
+        p0.y = m_GroundLevel;
+        p1.y = m_GroundLevel;
+        p2.y = m_GroundLevel;
+        p3.y = m_GroundLevel;
 
         m_LineRenderer.SetPosition(0, p0);
         m_LineRenderer.SetPosition(1, p1);
