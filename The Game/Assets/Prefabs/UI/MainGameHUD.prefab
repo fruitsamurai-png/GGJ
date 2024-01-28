@@ -229,7 +229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db24f2985d874f84088cb96f1f7ead37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  abilityHolder: {fileID: 0}
+  abilityName: 
 --- !u!1 &3393157023155335010
 GameObject:
   m_ObjectHideFlags: 0
@@ -444,7 +444,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db24f2985d874f84088cb96f1f7ead37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  abilityHolder: {fileID: 0}
+  abilityName: 
 --- !u!1 &3764655135262091176
 GameObject:
   m_ObjectHideFlags: 0
