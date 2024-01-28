@@ -102,6 +102,11 @@ public abstract class Enemy
             {
                     guardEnemyBehavior.m_Enemy.Alert(alerter);
             }
+            
+            else if (o.TryGetComponent(out SecurityBotEnemyBehavior securityBotEnemyBehavior))
+            {
+                securityBotEnemyBehavior.m_Enemy.Alert(alerter);
+            }
 
             // Do we inform other cameras?
             else if (o.TryGetComponent(out CameraEnemyBehavior cameraEnemyBehavior))
