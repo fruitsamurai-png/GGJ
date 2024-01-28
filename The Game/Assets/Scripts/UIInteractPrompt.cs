@@ -11,10 +11,12 @@ public class UIInteractPrompt : MonoBehaviour
 	GameObject interactable;
 
 	public static UIInteractPrompt instance;
-	void Start()
+
+	private void Awake()
 	{
 		instance = this;
 		cg = GetComponent<CanvasGroup>();
+		cg.alpha = 0f;
 	}
 
 	public static void ShowInteractable(GameObject interactable)

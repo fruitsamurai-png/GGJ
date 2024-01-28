@@ -13,6 +13,8 @@ public class UIStealArtwork : MonoBehaviour
 	public GameObject stealButton;
 	public GameObject replaceButton;
 
+	public GameObject levelWarning;
+
 	Artwork targetedArtwork;
 
 	GameObject player;
@@ -50,6 +52,8 @@ public class UIStealArtwork : MonoBehaviour
 
 		replaceButton.SetActive(targetedArtwork.artState == Artwork.ArtState.STOLEN);
 		stealButton.SetActive(targetedArtwork.artState == Artwork.ArtState.REAL);
+
+		levelWarning.SetActive(AbilityPassiveManager.AILevel < targetedArtwork.artLevel);
 	}
 	public void OpenArtwork(Artwork targetArt)
 	{
